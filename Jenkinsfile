@@ -3,7 +3,7 @@ pipeline {
     tools {nodejs "nodejs-jenkins"}
 
     environment {
-        releases_path_front = "/var/www/${base_url}/releases-front"
+        releases_path_front = "/var/www/${base_url}/ui"
         root_path_front = "/var/www/${base_url}/html"
     }
     
@@ -12,10 +12,10 @@ pipeline {
             steps {
                 sh '''
                 #!/bin/bash
-                cd ui
+                cp -r dist/ $releases_path_front
+                cd $releases_path_front
                 npm i
                 npm run build
-                cp -r dist/ $releases_path_front
                 ln -sfn $releases_path_front $root_path_front
                 '''
             }
