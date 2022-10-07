@@ -12,10 +12,9 @@ pipeline {
             steps {
                 sh '''
                 #!/bin/bash
-                cp -r dist/ $releases_path_front
-                cd $releases_path_front
                 npm i
                 npm run build
+                cp -r dist/ $releases_path_front
                 ln -sfn $releases_path_front $root_path_front
                 '''
             }
