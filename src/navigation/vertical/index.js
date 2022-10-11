@@ -47,9 +47,13 @@ import me from './me'
 import settings from './settings'
 import axios from 'axios'
 
-axios.get(`http://localhost:3000/setting/route-access`)
+//server
+import { $theServer } from '@themeConfig'
+
+axios.get(`${$theServer.server}/accesses`)
   .then(res => { 
-    if(res.data.success) { 
+    console.log('nav',res.data)
+    if(res.data) { 
         console.log("success")
         const routeAccess = res.data.routeData
         dashboard[1].children.forEach(item => {

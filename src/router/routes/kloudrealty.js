@@ -16,10 +16,10 @@ import { $theServer } from '@themeConfig'
 
 //get access
 
-axios.get(`${$theServer.server}/access`)
+axios.get(`${$theServer.server}/accesses`)
 
   .then(res => { 
-    console.log(res.data)
+    console.log('route',res.data)
     if(res.data) { 
         console.log($theServer)
         console.log("success")
