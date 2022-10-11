@@ -40,16 +40,12 @@ export const $themeConfig = {
 }
 
 //serve 167.99.0.93
-const  mode ='local' //'local','uat','prod'
+const  mode ='uat' //'local','uat','prod'
 
-const  uat = 'https://uat.kloudrealty.com/api' //  localhost or https://uatkloudrealty.com
-const  local = 'http://localhost:3000'
-const  prod = 'https://kloudrealty.com/api'
+const  uat = 'https://uat.kloudrealty.com/api/api/' //  localhost or https://uatkloudrealty.com
+const  prod = 'https://kloudrealty.com/api/api/'
 
 function ApiUrl(mode) {
-  if(mode == 'local') {
-    return local
-  }
   if(mode == 'uat') {
     return uat
   }
