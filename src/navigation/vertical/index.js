@@ -52,10 +52,21 @@ import { $theServer } from '@themeConfig'
 
 axios.get(`${$theServer.server}/accesses`)
   .then(res => { 
-    console.log('nav',res.data)
-    if(res.data) { 
+    console.log('nav',res.data.data)
+    if(res.data.data) { 
         console.log("success")
-        const routeAccess = res.data.routeData
+
+        const routeAccess = {}
+        const resData = res.data.data
+        console.log(resData)
+        resData.forEach( item => {
+            routeAccess[item.attributes.label] = {}
+            item.attributes.children.forEach(page => {
+                routeAccess[page.route][page.page] = page.Access
+            })
+        })
+        console.log('1',routeAccess)
+
         dashboard[1].children.forEach(item => {
             item.resource = routeAccess.dashboard[item.route]
         })
@@ -85,7 +96,10 @@ axios.get(`${$theServer.server}/accesses`)
         })
     }
 
-  })
+  }).catch(error => {
+    // Handle error.
+    console.log('An error occurred:', error.response);
+    });
 
 // Array of sections
 export default [

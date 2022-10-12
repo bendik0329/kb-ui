@@ -19,11 +19,19 @@ import { $theServer } from '@themeConfig'
 axios.get(`${$theServer.server}/accesses`)
 
   .then(res => { 
-    console.log('route',res.data)
-    if(res.data) { 
+    console.log('route',res.data.data)
+    if(res.data.data) { 
         console.log($theServer)
         console.log("success")
-        const routeAccess = res.data.routeData
+
+        const routeAccess = {}
+        const resData = res.data.data
+        resData.forEach( item => {
+            routeAccess[item.attributes.label] = {}
+            item.attributes.children.forEach(page => {
+                routeAccess[page.route][page.page] = page.Access
+            })
+        })
         dashboard.forEach(item => {
             item.meta.resource = routeAccess.dashboard[item.name]
         })
@@ -53,9 +61,10 @@ axios.get(`${$theServer.server}/accesses`)
         })
     }
 
-  }).catch(err => {
-    console.log(err)
-  })
+  }).catch(error => {
+    // Handle error.
+    console.log('An error occurred:', error.response);
+    });
 
 
 

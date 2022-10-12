@@ -130,7 +130,7 @@ export default {
     
   },
   created(){
-    this.checkLogin()
+    // this.checkLogin()
     console.log(this.GLOBAL)
     // this.$http.get(`${this.GLOBAL.api}/testing`)
     //     .then(res => {

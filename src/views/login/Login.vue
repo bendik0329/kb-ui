@@ -49,6 +49,7 @@
                 placeholder="john@example.com"
                 autofocus
                 autocomplete="username"
+                :disabled="loading"
               />
               <small class="text-danger">{{ errors[0] }}</small>
             </validation-provider>
@@ -80,6 +81,7 @@
                   name="login-password"
                   placeholder="Password"
                   autocomplete="current-password"
+                  :disabled="loading"
                 />
 
                 <b-input-group-append is-text>
@@ -110,11 +112,20 @@
             variant="primary"
             block
             :disabled="invalid"
-            :href="`${signinUrl}`"
+            @click.prevent="login()"
           >
             Sign in
           </b-button>
-
+          <!-- azure -->
+          <b-button
+            v-if="loading"
+            variant="primary"
+            block
+            :disabled="invalid"
+            :href="azureUrl"
+          >
+            Azure AD
+          </b-button>
         </b-form>
       </validation-observer>
 
@@ -197,18 +208,19 @@ export default {
   data() {
     return {
       show: true,
+      loading:false,
       variant: 'light',
       opacity: 1,
       blur: '3em',
-      userEmail: 'test123@test.com',
-      password: 'test123@test.com',
+      userEmail: 'test1234@test.test',
+      password: 'test1234',
       status: '',
       // validation rules
       required,
       email,
       isLogin: false,
       isNewUser: false,
-      signinUrl:`${this.GLOBAL.server}/auth/signin`
+      azureUrl:`${this.GLOBAL.server}/connect/microsoft`
     }
   },
   computed: {
@@ -217,6 +229,20 @@ export default {
     },
   },
   methods:{
+    login() {
+      this.loading = true
+      this.$http.post(`${this.GLOBAL.server}/auth/local/`,{
+        identifier:this.userEmail,
+        password:this.password
+      })
+        .then( res => {
+          console.log(res)
+          if(res.data.user) {
+            console.log(res.data.jwt)
+            localStorage.setItem('accessToken', res.data.jwt)
+          }
+        })
+    },
     checkLogin() {
       this.$http.get(`${this.GLOBAL.server}/login/check`)
         .then(res => {
@@ -240,22 +266,11 @@ export default {
         })
     },
   },
-  async  beforeCreate(){
-    this.$http.get(`${this.GLOBAL.server}/login/check`)
-        .then( res => {
-          console.log(res.data)
-          if(res.data.userStatus == 'old'){
-            localStorage.setItem('accessToken', res.data.accessToken)
-            localStorage.setItem('refreshToken', res.data.refreshToken)
-            localStorage.setItem('userData', JSON.stringify(res.data.user))
-            this.$ability.update(res.data.user.ability)
-            this.$router.push({name:'dashboard-analytics'})
-          }
-        })
-  },
+  
   created(){
-    this.checkLogin()
-    
+    this.show = false
+    localStorage.removeItem('accessToken')
+    console.log(localStorage.getItem('accessToken'))
   },
 }
 </script>

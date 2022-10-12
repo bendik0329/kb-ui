@@ -1,6 +1,6 @@
 export default {
   // Endpoints
-  loginEndpoint: '/jwt/login', //localhost:3000/
+  loginEndpoint: '/jwt/login', // https://uat.kloudrealty.com/api/api/auth/local/
   registerEndpoint: '/jwt/register',
   refreshEndpoint: '/jwt/refresh-token', //'/jwt/refresh-token'
   logoutEndpoint: '/jwt/logout',
