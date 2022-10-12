@@ -118,7 +118,6 @@
           </b-button>
           <!-- azure -->
           <b-button
-            v-if="loading"
             variant="primary"
             block
             :disabled="invalid"
@@ -184,6 +183,7 @@ import {
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
+import { abilityCheck } from './ability'
 
 export default {
   components: {
@@ -240,6 +240,24 @@ export default {
           if(res.data.user) {
             console.log(res.data.jwt)
             localStorage.setItem('accessToken', res.data.jwt)
+            const data = {
+              id: res.data.user.id,
+              fullName: res.data.user.fullName,
+              username: res.data.user.username,
+              // eslint-disable-next-line global-require
+              avatar: res.data.user.avatar,
+              email:  res.data.user.email,
+              role: res.data.user.userType,
+              ability: abilityCheck(res.data.user.userType),
+              extras: {
+                eCommerceCartItemsCount: 0,
+              },
+              isLogin:true
+            }
+            console.log(data)
+            localStorage.setItem('userData', JSON.stringify(data))
+            this.$ability.update(data.ability)
+            this.$router.push({name:'dashboard-analytics'})
           }
         })
     },

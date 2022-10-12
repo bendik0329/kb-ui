@@ -57,15 +57,31 @@
           v-if="props.column.field === 'franchise_name'"
           class="text-nowrap"
         >
-          <span class="text-nowrap">{{ props.row.franchise_name }}</span>
+          <span class="text-nowrap">{{ props.row.attributes.franchise_name }}</span>
         </span>
 
+        <!-- Column: address -->
+        <span
+          v-if="props.column.field === 'address'"
+          class="text-nowrap"
+        >
+          <span class="text-nowrap">{{ props.row.attributes.address }}</span>
+        </span>
 
-        <!-- Column: Status -->
-        <span v-else-if="props.column.field === 'status'">
-          <b-badge :variant="statusVariant(props.row.status)">
-            {{ props.row.status }}
-          </b-badge>
+        <!-- Column: phone -->
+        <span
+          v-if="props.column.field === 'phone'"
+          class="text-nowrap"
+        >
+          <span class="text-nowrap">{{ props.row.attributes.phone }}</span>
+        </span>
+
+        <!-- Column: franchise_owner -->
+        <span
+          v-if="props.column.field === 'franchise_owner'"
+          class="text-nowrap"
+        >
+          <span class="text-nowrap">{{ props.row.attributes.franchise_owner }}</span>
         </span>
 
         <!-- Column: Action -->
@@ -230,15 +246,11 @@ export default {
         },
         {
           label: 'Phone',
-          field: 'phone_number',
+          field: 'phone',
         },
         {
           label: 'Owner',
-          field: 'owner',
-        },
-        {
-          label: 'Status',
-          field: 'status',
+          field: 'franchise_owner',
         },
         {
           label: 'Action',
@@ -262,16 +274,13 @@ export default {
         4: 'light-warning',
         5: 'light-info',
       }],
-    selected: 'secret',
-    option: ['secret', 'publish'],
     ownerSelected: '',
-    ownerOption: [],
+    ownerOption: {},
     submitFranchise:{
         franchise_name:'',
         address:'',
-        phone_number:'',
-        owner: '',
-        status:'secret'
+        phone:'',
+        franchise_owner: '',
     },
     tempFranchise:{},
     required,
@@ -307,15 +316,29 @@ export default {
     },
   },
   methods: {
+    getUser() {
+      const url = `${this.GLOBAL.server}/users`
+      this.$http.get( url)
+        .then(res => { 
+          console.log(res.data)
+          const userList = []
+          const users = JSON.parse(JSON.stringify(res.data))
+          users.forEach(user => {
+            userList.push(user.username)
+          })
+          this.ownerOption = userList
+          console.log(userList.observeArray ,typeof(userList))
+
+      })
+    },
     getFranchise () {
       this.loading = true
-      const url = `${this.GLOBAL.server}/organization/franchise`
+      const url = `${this.GLOBAL.server}/franchises`
       this.$http.get( url)
         .then(res => { 
           console.log(res.data)
           if(res.data){
-            this.rows = res.data.franchises
-            this.ownerOption = res.data.userList
+            this.rows = res.data.data
             this.modalMethod = null
             this.loading = false
           }
@@ -328,9 +351,8 @@ export default {
             this.tempFranchise = {
                 franchise_name:'',
                 address:'',
-                phone_number:'',
-                owner: '',
-                status:'secret'
+                phone:'',
+                franchise_owner: '',
             }
         } else if (methods == 'edit') {
             console.log(methods , item._id)
@@ -360,14 +382,15 @@ export default {
         })
     },
     EditFranchise (item) {
-        let url =`${this.GLOBAL.server}/organization/franchise`
+        let url =`${this.GLOBAL.server}/franchises`
         let httpsMethods = 'post'
+        const data = {...item}
         //edit
         if (this.modalMethod == 'edit') {
-            url = `${this.GLOBAL.server}/organization/franchise/${item._id}`
+            url = `${this.GLOBAL.server}/franchises/${item._id}`
             httpsMethods = 'patch'
         }
-        this.$http[httpsMethods](url,item)
+        this.$http[httpsMethods](url,data)
           .then(res => { 
             console.log(res.data)
             if(res.data.message === 'success') {
@@ -377,7 +400,7 @@ export default {
     },
     DeleteFranchise (item) {
         console.log(item)
-        let url =`${this.GLOBAL.server}/organization/franchise/${item._id}`
+        let url =`${this.GLOBAL.server}/franchises/${item._id}`
         let httpsMethods = 'delete'
         this.$http[httpsMethods](url)
           .then(res => { 
@@ -390,6 +413,7 @@ export default {
   },
   created() {
     this.getFranchise()
+    this.getUser()
   },
   mounted() {
     this.$bus.$on('send-franchise', (franchise) => {this.EditFranchise(franchise)})

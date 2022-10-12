@@ -114,23 +114,26 @@ export default {
         this.$router.push({name:`${ where }`})
     },
     checkLogin() {
-      this.$http.get(`${this.GLOBAL.server}/login/check`)
-        .then(res => {
-          console.log(res.data)
-          if(res.data.isLogin) {
-            this.isLogin = res.data.isLogin
-            localStorage.setItem('userData', JSON.stringify(res.data.user))
-            this.$ability.update(res.data.user.ability)
-          }else{
-            console.log("login yet")
-          }
+      const user = JSON.parse(localStorage.getItem('userData'))
+      console.log(JSON.parse(localStorage.getItem('userData')))
+      // this.isLogin = user.isLogin
+      // this.$http.get(`${this.GLOBAL.server}/login/check`)
+      //   .then(res => {
+      //     console.log(res.data)
+      //     if(res.data.isLogin) {
+      //       this.isLogin = res.data.isLogin
+      //       localStorage.setItem('userData', JSON.stringify(res.data.user))
+      //       this.$ability.update(res.data.user.ability)
+      //     }else{
+      //       console.log("login yet")
+      //     }
 
-        })
+      //   })
     },
     
   },
   created(){
-    // this.checkLogin()
+    this.checkLogin()
     console.log(this.GLOBAL)
     // this.$http.get(`${this.GLOBAL.api}/testing`)
     //     .then(res => {

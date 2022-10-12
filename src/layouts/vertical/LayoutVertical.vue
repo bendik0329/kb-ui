@@ -61,8 +61,8 @@ export default {
     },
   },
   created(){
-    this.checkLogin()
-    this.tokenCheck()
+    // this.checkLogin()
+    // this.tokenCheck()
   }
 }
 </script>

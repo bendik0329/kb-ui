@@ -82,25 +82,14 @@
               >
               <v-select
                 id="owner-select"
-                v-model="tempFranchise.owner"
+                v-model="tempFranchise.franchise_owner"
                 :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
                 :options="tempOwnerOption"
               />
             </b-form-group>
             <small class="text-danger">{{ errors[0] }}</small>
         </validation-provider>
-        <!-- stauts -->
-        <b-form-group
-          label="Choose the stauts"
-          label-for="status-select"
-        >
-          <v-select
-            id="status-select"
-            v-model="tempFranchise.status"
-            :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-            :options="option"
-          />
-        </b-form-group>
+        
       </b-form>
       </validation-observer>
     </b-modal>
@@ -159,16 +148,13 @@ export default {
     return {
       headerBgVariant: 'light',
       headerTextVariant: 'dark',
-      selected: '',
-      option: ['secret', 'publish'],
       ownerSelected: '',
-      tempOwnerOption: [],
+      tempOwnerOption: {},
       tempFranchise:{
         franchise_name:'',
         address:'',
-        phone_number:'',
-        owner: '',
-        status:''
+        phone:'',
+        franchise_name:'',
       },
       name: '',
       nameState: null,

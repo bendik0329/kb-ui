@@ -9,9 +9,9 @@ import { initialAbility } from './config'
 
 
 
-// const userData = JSON.parse(localStorage.getItem('userData'))
-// const existingAbility = userData ? userData.ability : null
+const userData = JSON.parse(localStorage.getItem('userData'))
+const existingAbility = userData ? userData.ability : null
 
-export default new Ability( initialAbility) //existingAbility || initialAbility
+export default new Ability( existingAbility || initialAbility) //existingAbility || initialAbility
 
 
