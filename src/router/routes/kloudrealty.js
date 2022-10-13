@@ -19,10 +19,10 @@ import { $theServer } from '@themeConfig'
 axios.get(`${$theServer.server}/accesses`)
 
   .then(res => { 
-    console.log('route',res.data.data)
+    // console.log('route',res.data.data)
     if(res.data.data) { 
-        console.log($theServer)
-        console.log("success")
+        // console.log($theServer)
+        // console.log("success")
 
         const routeAccess = {}
         const resData = res.data.data

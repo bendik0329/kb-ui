@@ -60,12 +60,12 @@
             >
             <b-form-group
               label="Phone Number"
-              label-for="phone_number"
+              label-for="phone"
             >
                 <b-form-input
-                  id="phone_number"
+                  id="phone"
                   placeholder="Phone Number"
-                  v-model="tempFranchise.phone_number"
+                  v-model="tempFranchise.phone"
                 />
             </b-form-group>
             <small class="text-danger">{{ errors[0] }}</small>
@@ -132,7 +132,7 @@ export default {
         default () {return{}}
     },
     ownerOption: {
-        type: Array,
+        type: [Array,Object],
         default () {return{}}
     }
   },
@@ -151,10 +151,10 @@ export default {
       ownerSelected: '',
       tempOwnerOption: {},
       tempFranchise:{
+        id:null,
         franchise_name:'',
         address:'',
         phone:'',
-        franchise_name:'',
       },
       name: '',
       nameState: null,

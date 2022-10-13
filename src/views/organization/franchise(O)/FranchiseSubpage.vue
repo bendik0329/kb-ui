@@ -277,10 +277,11 @@ export default {
     ownerSelected: '',
     ownerOption: {},
     submitFranchise:{
-        franchise_name:'',
-        address:'',
-        phone:'',
-        franchise_owner: '',
+      id:null,
+      franchise_name:'',
+      address:'',
+      phone:'',
+      franchise_owner: '',
     },
     tempFranchise:{},
     required,
@@ -327,7 +328,7 @@ export default {
             userList.push(user.username)
           })
           this.ownerOption = userList
-          console.log(userList.observeArray ,typeof(userList))
+          console.log(userList ,typeof(userList))
 
       })
     },
@@ -349,24 +350,31 @@ export default {
         if (methods == 'create') {
             console.log(methods )
             this.tempFranchise = {
+                id: Math.floor( new Date() / 1000),
                 franchise_name:'',
                 address:'',
                 phone:'',
                 franchise_owner: '',
             }
         } else if (methods == 'edit') {
-            console.log(methods , item._id)
-            this.tempFranchise = {...item}
+            console.log(methods , item)
+            this.tempFranchise = {
+              id:item.id,
+              franchise_name:item.attributes.franchise_name,
+              address:item.attributes.address,
+              phone:item.attributes.phone,
+              franchise_owner: item.attributes.franchise_owner,
+            }
         } 
     },
     showMsgBox(item) {
       this.boxOne = ''
       this.$bvModal
-        .msgBoxConfirm(`Please confirm that you want to delete ${item.franchise_name}.`, {
+        .msgBoxConfirm(`Please confirm that you want to delete ${ item.attributes.franchise_name }.`, {
           title: 'Please Confirm',
           size: 'sm',
-          okVariant: 'primary',
-          okTitle: 'Yes',
+          okVariant: 'danger',
+          okTitle: 'Delete',
           cancelTitle: 'No',
           cancelVariant: 'outline-secondary',
           hideHeaderClose: false,
@@ -384,32 +392,45 @@ export default {
     EditFranchise (item) {
         let url =`${this.GLOBAL.server}/franchises`
         let httpsMethods = 'post'
-        const data = {...item}
+        
         //edit
         if (this.modalMethod == 'edit') {
-            url = `${this.GLOBAL.server}/franchises/${item._id}`
-            httpsMethods = 'patch'
+            url = `${this.GLOBAL.server}/franchises/${item.id}`
+            httpsMethods = 'put'
         }
-        this.$http[httpsMethods](url,data)
+        this.$http[httpsMethods](url,{data:item})
           .then(res => { 
             console.log(res.data)
-            if(res.data.message === 'success') {
+            if(res.data.data.attributes) {
                 this.getFranchise()
+                this.makeToast('success','success','update')
             }
+          }).catch(err => {
+            this.makeToast('fail','danger','update')
           })
     },
     DeleteFranchise (item) {
         console.log(item)
-        let url =`${this.GLOBAL.server}/franchises/${item._id}`
+        let url =`${this.GLOBAL.server}/franchises/${item.id}`
         let httpsMethods = 'delete'
         this.$http[httpsMethods](url)
           .then(res => { 
             console.log(res.data)
-            if(res.data.message === 'success') {
+            if(res.data.data.attributes) {
                 this.getFranchise()
+                this.makeToast('success','success','delete')
             }
+          }).catch(err => {
+            this.makeToast('fail','danger','delete')
           })
-    }
+    },
+    makeToast(result,variant = null,methods) {
+      this.$bvToast.toast(`${methods}  ${result}!!`, {
+        title: `${result || 'default'} !`,
+        variant,
+        solid: true,
+      })
+    },
   },
   created() {
     this.getFranchise()

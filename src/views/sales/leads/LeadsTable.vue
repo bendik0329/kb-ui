@@ -486,7 +486,7 @@ export default {
         this.showTable = `${table}`
     },
     getLeads () {
-      this.$http.get(`${this.GLOBAL.server}/sales/leads`)
+      this.$http.get(`${this.GLOBAL.server}leads`)
         .then(res => {
           console.log(res.data)
           if(res.data.message == 'owner') {

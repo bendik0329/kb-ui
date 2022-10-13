@@ -54,16 +54,23 @@
               v-if="props.column.field === 'team_name'"
               class="text-nowrap"
               >
-              <span class="text-nowrap">{{ props.row.team_name }}</span>
+              <span class="text-nowrap">{{ props.row.attributes.team_name }}</span>
             </span>
 
+            <!-- Column: franchise -->
+            <span
+              v-if="props.column.field === 'franchise'"
+              class="text-nowrap"
+              >
+              <span class="text-nowrap">{{ props.row.attributes.franchise.data.attributes.franchise_name }}</span>
+            </span>
 
             <!-- Column: Member -->
             <span v-else-if="props.column.field === 'member'">
-              <b-badge v-for="item in props.row.member" :key ="item" 
+              <b-badge v-for="item in props.row.attributes.members.data" :key ="item.id" 
                 variant="success"
                 class="mx-1"
-                > {{item}} </b-badge>
+                > {{item.attributes.username}} </b-badge>
             </span>
 
             <!-- Column: Action -->
@@ -281,14 +288,16 @@ export default {
   },
   methods: {
     getTeams () {
-        const url = `${this.GLOBAL.server}/organization/team`
+      //filter api ?filters[franchise][$eq]=John
+
+        const url = `${this.GLOBAL.server}/teams?populate[0]=franchise&populate[1]=members`
         this.$http.get( url)
           .then(res => { 
-            console.log(res)
-            if (res.data.message == 'success') {
-              this.rows = res.data.teams
-              this.franchiseOption = res.data.franchises
-              this.userOption = res.data.users
+            console.log(res.data.data)
+            if (res.data) {
+              this.rows = res.data.data
+              //this.franchiseOption = res.data.franchises
+              //this.userOption = res.data.users
               this.modalMethod = null
             } 
         })
@@ -330,11 +339,11 @@ export default {
         })
     },
     EditTeams (item) {
-        let url =`${this.GLOBAL.server}/organization/team`
+        let url =`${this.GLOBAL.server}/teams`
         let httpsMethods = 'post'
         //edit
         if (this.modalMethod == 'edit') {
-            url = `${this.GLOBAL.server}/organization/team/${item._id}`
+            url = `${this.GLOBAL.server}/team/${item.id}`
             httpsMethods = 'patch'
         }
         this.$http[httpsMethods](url,item)
@@ -348,7 +357,7 @@ export default {
     },
     DeleteTeams (item) {
         console.log(item)
-        let url =`${this.GLOBAL.server}/organization/team/${item._id}`
+        let url =`${this.GLOBAL.server}teams/${item.id}`
         let httpsMethods = 'delete'
         this.$http[httpsMethods](url)
           .then(res => { 

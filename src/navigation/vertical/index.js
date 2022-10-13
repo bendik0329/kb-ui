@@ -52,20 +52,20 @@ import { $theServer } from '@themeConfig'
 
 axios.get(`${$theServer.server}/accesses`)
   .then(res => { 
-    console.log('nav',res.data.data)
+    // console.log('nav',res.data.data)
     if(res.data.data) { 
-        console.log("success")
+        // console.log("success")
 
         const routeAccess = {}
         const resData = res.data.data
-        console.log(resData)
+        // console.log(resData)
         resData.forEach( item => {
             routeAccess[item.attributes.label] = {}
             item.attributes.children.forEach(page => {
                 routeAccess[page.route][page.page] = page.Access
             })
         })
-        console.log('1',routeAccess)
+        // console.log('1',routeAccess)
 
         dashboard[1].children.forEach(item => {
             item.resource = routeAccess.dashboard[item.route]
