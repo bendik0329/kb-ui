@@ -282,8 +282,8 @@ export default {
     return {
       headerBgVariant: 'light',
       headerTextVariant: 'dark',
-      tempTypeOptions: ['franchise', 'agent','buyer','seller','management'],
-      tempCategoryOptions:['owner','franchise','team','agent',],
+      tempTypeOptions: ['Franchise', 'Agent','Buyer','Seller','Management'],
+      tempCategoryOptions:['Owner','Franchise','Team','Agent',],
       tempSourceOptions:['System','Advertisement','Franchise Name','Agent Referral','Client Referral','Social','Web','Word of Mouth','Other'],
       tempRatingOptions:['hot','warm','cold',],
       tempTeamOption: [],
@@ -291,7 +291,6 @@ export default {
       tempLead:{
         type:'',
         category:'',
-        status:'',
         rating:'',
         name:'',
         phone:'',

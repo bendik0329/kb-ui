@@ -111,111 +111,69 @@
           </b-form-checkbox>
         </template>
 
+        <!-- Column: type -->
+        <template #cell(type)="data">
+          {{data.item.attributes.type}}
+        </template>
+
+        <!-- Column: category -->
+        <template #cell(category)="data">
+          {{data.item.attributes.category}}
+        </template>
+
+
         <!-- Column: status -->
         <template #cell(status)="data">
           <b-badge
             pill
-            :variant="statusVariant(data.item.status)"
+            :variant="statusVariant(data.item.attributes.status)"
           >
-            {{ data.item.status }}
+            {{ data.item.attributes.status }}
           </b-badge>
         </template>
         
+
+        <!-- Column: name -->
+        <template #cell(name)="data">
+          {{data.item.attributes.name}}
+        </template>
+
+
+        <!-- Column: phone -->
+        <template #cell(phone)="data">
+          {{data.item.attributes.phone}}
+        </template>
+
+
+        <!-- Column: email -->
+        <template #cell(email)="data">
+          {{data.item.attributes.email}}
+        </template>
+
+
+        <!-- Column: address -->
+        <template #cell(address)="data">
+          {{data.item.attributes.address}}
+        </template>
+
+
+
         <!-- Column: rating -->
         <template #cell(rating)="data">
           <b-badge
             pill
-            :variant="ratingVariant(data.item.rating)"
+            :variant="ratingVariant(data.item.attributes.rating)"
           >
-            {{ data.item.rating }}
+            {{ data.item.attributes.rating }}
           </b-badge>
         </template>
 
 
-
-        <template #head(invoiceStatus)>
-          <feather-icon
-            icon="TrendingUpIcon"
-            class="mx-auto"
-          />
+        <!-- Column: source -->
+        <template #cell(source)="data">
+          {{data.item.attributes.source}}
         </template>
 
-        <!-- Column: Id -->
-        <template #cell(id)="data">
-          <b-link
-            :to="{ name: 'apps-invoice-preview', params: { id: data.item.type }}"
-            class="font-weight-bold"
-          >
-            #{{ data.value }}
-          </b-link>
-        </template>
-  
-        <!-- Column: Invoice Status -->
-        <template #cell(invoiceStatus)="data">
-          <b-avatar
-            :id="`invoice-row-${data.item.id}`"
-            size="32"
-            :variant="`light-${resolveInvoiceStatusVariantAndIcon(data.item.invoiceStatus).variant}`"
-          >
-            <feather-icon
-              :icon="resolveInvoiceStatusVariantAndIcon(data.item.invoiceStatus).icon"
-            />
-          </b-avatar>
-          <b-tooltip
-            :target="`invoice-row-${data.item.id}`"
-            placement="top"
-          >
-            <p class="mb-0">
-              {{ data.item.invoiceStatus }}
-            </p>
-            <p class="mb-0">
-              Balance: {{ data.item.balance }}
-            </p>
-            <p class="mb-0">
-              Due Date: {{ data.item.dueDate }}
-            </p>
-          </b-tooltip>
-        </template>
-  
-        <!-- Column: Client -->
-        <template #cell(client)="data">
-          <b-media vertical-align="center">
-            <template #aside>
-              <b-avatar
-                size="32"
-                :src="data.item.avatar"
-                :text="avatarText(data.item.client.name)"
-                :variant="`light-${resolveClientAvatarVariant(data.item.invoiceStatus)}`"
-              />
-            </template>
-            <span class="font-weight-bold d-block text-nowrap">
-              {{ data.item.client.name }}
-            </span>
-            <small class="text-muted">{{ data.item.client.companyEmail }}</small>
-          </b-media>
-        </template>
-  
-        <!-- Column: Issued Date -->
-        <template #cell(issuedDate)="data">
-          <span class="text-nowrap">
-            {{ data.value }}
-          </span>
-        </template>
-  
-        <!-- Column: Balance -->
-        <template #cell(balance)="data">
-          <template v-if="data.value === 0">
-            <b-badge
-              pill
-              variant="light-success"
-            >
-              Paid
-            </b-badge>
-          </template>
-          <template v-else>
-            {{ data.value }}
-          </template>
-        </template>
   
         <!-- Column: Actions -->
         <template #cell(actions)="data">
@@ -323,7 +281,6 @@
   import { avatarText } from '@core/utils/filter'
   import vSelect from 'vue-select'
   import { onUnmounted } from '@vue/composition-api'
-  import { isToday } from '@core/utils/utils.js'
   import store from '@/store'
 
   import LeadsModal from './LeadsModal.vue'
@@ -450,7 +407,6 @@
         tempLead:{
           type:'',
           category:'',
-          status:'',
           name:'',
           phone:'',
           email:'',
@@ -481,13 +437,16 @@
     },
     methods:{
       getLead() {
-        this.$http.get(`${this.GLOBAL.server}/sales/leads`)
+        this.$http.get(`${this.GLOBAL.server}/leads`)
         .then(res => {
-          console.log(res.data.leads)
-          this.leadsData = res.data.leads
-          this.data = res.data.leads
+          console.log(res.data)
+          this.leadsData = res.data.data
+          this.data = res.data.data
           this.typeOptions = res.data.typeOptions
-          this.filterLead(this.leadsData)
+          ///this.filterLead(this.leadsData)
+        }).catch(err => {
+          console.log(err)
+          this.makeToast('fail','danger','Get leads')
         })
       },
       filterLead (leads) {
@@ -497,13 +456,13 @@
         const today = new Date().toISOString().split('T', 1)[0]
 
         leads.filter(lead => {
-          if(lead.status == 'new'){
+          if(lead.attributes.status == 'new'){
             newLeads.push(lead)
           }
-          if(lead.status !== 'qualified' && lead.status !== 'unqualified'){
+          if(lead.attributes.status !== 'qualified' && lead.status !== 'unqualified'){
             openLeads.push(lead)
           }
-          const createdDay = lead.created.split('T', 1)[0]
+          const createdDay = lead.attributes.created.split('T', 1)[0]
           if(today == createdDay){
             todayLeads.push(lead)
           }
@@ -516,7 +475,16 @@
       },
       openLeadsModal (methods ='create',item ) {
         console.log(methods,item)
-        
+        this.tempLead = {
+          id: Math.floor( new Date() / 1000),
+          type:'',
+          category:'',
+          name:'',
+          phone:'',
+          email:'',
+          address:'',
+          rating:'',
+        }
         this.updateMethod = methods
         if (methods ==='edit') {
             this.tempLead = item
@@ -530,31 +498,26 @@
         }
       },
       updateLead (item) {
+        console.log(item)
         let httpMethod = 'post'
-        let url = `${this.GLOBAL.server}/sales/leads`
+        let url = `${this.GLOBAL.server}/leads`
 
         if(this.updateMethod === 'edit') {
             httpMethod = 'patch'
-            url = `${this.GLOBAL.server}/sales/leads/${item._id}`
+            url = `${this.GLOBAL.server}/leads/${item.id}`
         }
-        this.$http[httpMethod](url,item)
+        this.$http[httpMethod](url,{data:item})
           .then(res => {
             console.log(res.data)
-            this.makeToast(res.data.result,res.data.message,'Update Lead')
-            this.getLead()
-            this.updateMethod = ''
-            if(res.data.result) {
-              this.tempLead = {
-                type:'',
-                category:'',
-                status:'',
-                name:'',
-                phone:'',
-                email:'',
-                address:'',
-                rating:'',
-              }
+            if(res.data.data){
+
+              this.makeToast('success','success','Update Lead')
+              this.getLead()
             }
+            this.updateMethod = ''
+            
+          }).catch(error => {
+            this.makeToast(error,'danger','update')
           })
       },
       makeToast(result,variant = null,methods) {
@@ -588,7 +551,7 @@
       },
       DeleteLead (item) {
         console.log(item)
-        let url =`${this.GLOBAL.server}/sales/leads/${item._id}`
+        let url =`${this.GLOBAL.server}/leads/${item.id}`
         let httpsMethods = 'delete'
         this.$http[httpsMethods](url)
           .then(res => { 
@@ -610,11 +573,11 @@
       statusVariant(status) {
         const statusColor = {
           /* eslint-disable key-spacing */
-          new: 'light-primary',
-          contacted: 'light-success',
-          working: 'light-danger',
-          qualified: 'light-warning',
-          unqualified: 'light-info',
+          New: 'light-primary',
+          Contacted: 'light-success',
+          Working: 'light-danger',
+          Qualified: 'light-warning',
+          Unqualified: 'light-info',
           /* eslint-enable key-spacing */
         }
         return  statusColor[status]

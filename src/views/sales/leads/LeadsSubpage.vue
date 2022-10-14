@@ -10,8 +10,6 @@
 <script>
 import { BRow, BCol, BLink,BCard,BTab,BTabs,BButton, BCardTitle,BCardText, BCardSubTitle, } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
-import LeadsDonutChart from './LeadsDonutChart'
-import EchartDoughnut from './EchartDoughnut.vue'
 import LeadList from './LeadList'
 
 export default {
@@ -26,8 +24,6 @@ export default {
     BCardText,
     BCardSubTitle,
     BButton,
-    LeadsDonutChart,
-    EchartDoughnut,
     LeadList,
   },
   directives: {

@@ -16,6 +16,14 @@
       "action": "Action"
     }
   },
+  "layout":{
+    "homePage":{
+      "footer":"Kloud Realty, Inc."
+    },
+    "vertical":{
+      "footer":"Kloud Realty, Inc."
+    }
+  },
   "UI Elements": "UI Elements",
   "Forms & Tables": "Forms & Tables",
   "Pages": "Pages",

@@ -62,7 +62,9 @@
               v-if="props.column.field === 'franchise'"
               class="text-nowrap"
               >
-              <span class="text-nowrap">{{ props.row.attributes.franchise.data.attributes.franchise_name }}</span>
+              <span
+                v-if="props.row.attributes.franchise.data"
+                class="text-nowrap">{{ props.row.attributes.franchise.data.attributes.franchise_name }}</span>
             </span>
 
             <!-- Column: Member -->
@@ -212,6 +214,8 @@ export default {
   },
   data() {
     return {
+      userType:'',
+      userFranchise: {},
       pageLength: 10,
       dir: false,
       columns: [
@@ -251,6 +255,7 @@ export default {
       }],
     franchiseSelected: '',
     franchiseOption: [],
+    franchiseData:{},
     userSelected: '',
     userOption: [],
     tempTeam:{},
@@ -287,8 +292,44 @@ export default {
     },
   },
   methods: {
+    getUserType(){
+      this.userType = JSON.parse(localStorage.getItem('userData')).role
+      const url = `${this.GLOBAL.server}/users/me?populate=*`
+      this.$http.get( url)
+        .then(res => { 
+          console.log(res.data.franchise)
+          this.userFranchise = res.data.franchise
+
+      })
+    },
+    getFranchise () {
+      this.loading = true
+      const url = `${this.GLOBAL.server}/franchises`
+      this.$http.get( url)
+        .then(res => { 
+          console.log(res.data.data)
+          const Franchises = res.data.data
+          Franchises.forEach(item => {
+            this.franchiseOption.push(item.attributes.franchise_name)
+            this.franchiseData[item.attributes.franchise_name] = {
+              id:item.id,
+              ...item.attributes
+            }
+          })
+          console.log('franchise',this.franchiseData)
+          
+      })
+    },
     getTeams () {
-      //filter api ?filters[franchise][$eq]=John
+
+      if(this.userType == 'owner'){
+        console.log('owner')
+
+      }
+      if(this.userType == 'franchise'){
+        console.log('123')
+      }
+      //filter api ?filters[franchise][$eq]=${}
 
         const url = `${this.GLOBAL.server}/teams?populate[0]=franchise&populate[1]=members`
         this.$http.get( url)
@@ -300,6 +341,8 @@ export default {
               //this.userOption = res.data.users
               this.modalMethod = null
             } 
+        }).catch(err => {
+            this.makeToast('fail','danger','Get Teams')
         })
     },
     openModal(methods, item) {
@@ -307,13 +350,22 @@ export default {
         if (methods == 'create') {
             console.log(methods )
             this.tempTeam = {
-                team_name:'',
-                franchise:'',
-                member:[],
+              id: Math.floor( new Date() / 1000),
+              team_name:'',
+              franchise: this.userFranchise,
+              member:[],
             }
+            console.log(this.tempTeam)
         } else if (methods == 'edit') {
             console.log(methods , item)
-            this.tempTeam = {...item}
+            this.tempTeam = {
+              id:item.id,
+              team_name:item.attributes.team_name,
+              franchise_name:item.attributes.franchise_name,
+              franchise: this.franchiseData[item.attributes.franchise_name],
+              member:[],
+              //...item
+            }
         } 
     },
     showMsgBox(item) {
@@ -339,6 +391,7 @@ export default {
         })
     },
     EditTeams (item) {
+      console.log(item)
         let url =`${this.GLOBAL.server}/teams`
         let httpsMethods = 'post'
         //edit
@@ -346,13 +399,15 @@ export default {
             url = `${this.GLOBAL.server}/team/${item.id}`
             httpsMethods = 'patch'
         }
-        this.$http[httpsMethods](url,item)
+        this.$http[httpsMethods](url,{data:item})
           .then(res => { 
             console.log(res.data)
-            if(res.data.message === 'success') {
+            if(res.data.data) {
                 this.getTeams()
+                this.makeToast('success',this.modalMethod)
             }
-            this.makeToast(res.data.message,this.modalMethod)
+          }).catch(err => {
+            this.makeToast('fail','danger','update')
           })
     },
     DeleteTeams (item) {
@@ -377,7 +432,9 @@ export default {
     },
   },
   created() {
+    this.getUserType()
     this.getTeams()
+    this.getFranchise()
   },
   mounted() {
     this.$bus.$on('send-team', (team) => {this.EditTeams(team)})

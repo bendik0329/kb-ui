@@ -38,7 +38,7 @@
         <validation-provider
               #default="{ errors }"
               name="Franchise"
-              rules="required"
+              rules=""
             >
             <b-form-group
               label="Choose the Franchise"
@@ -46,7 +46,7 @@
               >
               <v-select
                 id="franchise-select"
-                v-model="tempTeam.franchise"
+                v-model="tempTeam.franchise_name"
                 :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
                 :options="tempFranchiseOption"
               />
@@ -57,7 +57,7 @@
         <validation-provider
               #default="{ errors }"
               name="User"
-              rules="required"
+              rules=""
             >
             <b-form-group
               label="Choose the User"
@@ -115,11 +115,11 @@ export default {
         default () {return{}}
     },
     franchiseOption: {
-        type: Array,
+        type: [Array,Object],
         default () {return{}}
     },
     userOption: {
-        type: Array,
+        type: [Array,Object],
         default () {return{}}
     }
   },
@@ -144,7 +144,7 @@ export default {
       tempUserOption: [],
       tempTeam:{
         team_name:'',
-        franchise:'',
+        franchise_name:'',
         member:[],
       },
       name: '',
