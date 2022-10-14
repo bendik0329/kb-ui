@@ -42,7 +42,7 @@ export const $themeConfig = {
 //serve 167.99.0.93
 const  mode ='uat' //'local','uat','prod'
 
-const  uat = 'https://uat.kloudrealty.com/api/api' //  localhost or https://uatkloudrealty.com
+const  uat = 'https://uat.kloudrealty.com/api/api' 
 const  prod = 'https://kloudrealty.com/api/api'
 
 function ApiUrl(mode) {

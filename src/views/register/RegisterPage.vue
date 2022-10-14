@@ -254,7 +254,7 @@ export default {
     register() {
       this.$refs.registerForm.validate().then(success => {
         if (success) {
-          axios.post('http://localhost:3000/user/register',{
+          axios.post(`${this.GLOBAL.server}user/register`,{
             id: this.id,
             username: this.username,
             fullName:this.fullName,
@@ -264,7 +264,7 @@ export default {
               console.log(res)
               if (res.data.success) {
                 console.log('back to home')
-                axios.post('http://localhost:3000/login',{
+                axios.post(`${this.GLOBAL.server}/login`,{
                     id: this.id,
                     username: this.username,
                 }).then(res => {
