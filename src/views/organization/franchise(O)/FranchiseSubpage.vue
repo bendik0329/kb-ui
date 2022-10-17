@@ -52,36 +52,13 @@
         slot-scope="props"
       >
 
-        <!-- Column: Name -->
-        <span
-          v-if="props.column.field === 'franchise_name'"
-          class="text-nowrap"
-        >
-          <span class="text-nowrap">{{ props.row.attributes.franchise_name }}</span>
-        </span>
-
-        <!-- Column: address -->
-        <span
-          v-if="props.column.field === 'address'"
-          class="text-nowrap"
-        >
-          <span class="text-nowrap">{{ props.row.attributes.address }}</span>
-        </span>
-
-        <!-- Column: phone -->
-        <span
-          v-if="props.column.field === 'phone'"
-          class="text-nowrap"
-        >
-          <span class="text-nowrap">{{ props.row.attributes.phone }}</span>
-        </span>
-
+        
         <!-- Column: franchise_owner -->
         <span
           v-if="props.column.field === 'franchise_owner'"
           class="text-nowrap"
         >
-          <span class="text-nowrap">{{ props.row.attributes.franchise_owner }}</span>
+          <span class="text-nowrap">{{ props.row.franchise_owner }}</span>
         </span>
 
         <!-- Column: Action -->
@@ -339,7 +316,16 @@ export default {
         .then(res => { 
           console.log(res.data)
           if(res.data){
-            this.rows = res.data.data
+            const FranchiseData = res.data.data
+            const newRow = []
+            FranchiseData.forEach(item => {
+              newRow.push({
+                id:item.id,
+                ...item.attributes
+              })
+            })
+
+            this.rows = newRow
             this.modalMethod = null
             this.loading = false
           }
@@ -360,17 +346,17 @@ export default {
             console.log(methods , item)
             this.tempFranchise = {
               id:item.id,
-              franchise_name:item.attributes.franchise_name,
-              address:item.attributes.address,
-              phone:item.attributes.phone,
-              franchise_owner: item.attributes.franchise_owner,
+              franchise_name:item.franchise_name,
+              address:item.address,
+              phone:item.phone,
+              franchise_owner: item.franchise_owner,
             }
         } 
     },
     showMsgBox(item) {
       this.boxOne = ''
       this.$bvModal
-        .msgBoxConfirm(`Please confirm that you want to delete ${ item.attributes.franchise_name }.`, {
+        .msgBoxConfirm(`Please confirm that you want to delete ${ item.franchise_name }.`, {
           title: 'Please Confirm',
           size: 'sm',
           okVariant: 'danger',

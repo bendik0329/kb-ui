@@ -39,6 +39,10 @@
             disableSelectInfo: true, // disable the select info panel on top
             selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
           }"
+          :sort-options="{
+            enabled: true,
+            initialSortBy: {field: 'team_name', type: 'asc'}
+          }"
           :pagination-options="{
             enabled: true,
             perPage:pageLength
@@ -49,13 +53,6 @@
             slot-scope="props"
             >
 
-            <!-- Column: Name -->
-            <span
-              v-if="props.column.field === 'team_name'"
-              class="text-nowrap"
-              >
-              <span class="text-nowrap">{{ props.row.attributes.team_name }}</span>
-            </span>
 
             <!-- Column: franchise -->
             <span
@@ -63,13 +60,13 @@
               class="text-nowrap"
               >
               <span
-                v-if="props.row.attributes.franchise.data"
-                class="text-nowrap">{{ props.row.attributes.franchise.data.attributes.franchise_name }}</span>
+                v-if="props.row.franchise.data"
+                class="text-nowrap">{{ props.row.franchise.data.attributes.franchise_name }}</span>
             </span>
 
             <!-- Column: Member -->
             <span v-else-if="props.column.field === 'member'">
-              <b-badge v-for="item in props.row.attributes.members.data" :key ="item.id" 
+              <b-badge v-for="item in props.row.members.data" :key ="item.id" 
                 variant="success"
                 class="mx-1"
                 > {{item.attributes.username}} </b-badge>
@@ -224,7 +221,7 @@ export default {
           field: 'team_name',
         },
         {
-          label: 'franchise',
+          label: 'Franchise',
           field: 'franchise',
         },
         {
@@ -297,9 +294,24 @@ export default {
       const url = `${this.GLOBAL.server}/users/me?populate=*`
       this.$http.get( url)
         .then(res => { 
-          console.log(res.data.franchise)
           this.userFranchise = res.data.franchise
 
+      })
+    },
+    getUsersList(){
+      const url = `${this.GLOBAL.server}/users?populate=*`
+      this.$http.get( url)
+        .then(res => { 
+          console.log('user',res.data)
+          const userData = res.data
+          const userList = []
+          userData.forEach(item => {
+            console.log(item)
+            userList.push(item.username)
+            
+          })
+          console.log('list',userList)
+          this.userOption = userList
       })
     },
     getFranchise () {
@@ -307,7 +319,6 @@ export default {
       const url = `${this.GLOBAL.server}/franchises`
       this.$http.get( url)
         .then(res => { 
-          console.log(res.data.data)
           const Franchises = res.data.data
           Franchises.forEach(item => {
             this.franchiseOption.push(item.attributes.franchise_name)
@@ -316,7 +327,6 @@ export default {
               ...item.attributes
             }
           })
-          console.log('franchise',this.franchiseData)
           
       })
     },
@@ -332,11 +342,19 @@ export default {
       //filter api ?filters[franchise][$eq]=${}
 
         const url = `${this.GLOBAL.server}/teams?populate[0]=franchise&populate[1]=members`
-        this.$http.get( url)
+        this.$http.get(url)
           .then(res => { 
-            console.log(res.data.data)
             if (res.data) {
-              this.rows = res.data.data
+              const Data = res.data.data
+              const newRow = []
+              Data.forEach(item => {
+                newRow.push({
+                  id:item.id,
+                  ...item.attributes
+                })
+              })
+              this.rows = newRow
+              //this.rows = res.data.data
               //this.franchiseOption = res.data.franchises
               //this.userOption = res.data.users
               this.modalMethod = null
@@ -355,16 +373,14 @@ export default {
               franchise: this.userFranchise,
               member:[],
             }
-            console.log(this.tempTeam)
         } else if (methods == 'edit') {
             console.log(methods , item)
             this.tempTeam = {
               id:item.id,
-              team_name:item.attributes.team_name,
-              franchise_name:item.attributes.franchise_name,
-              franchise: this.franchiseData[item.attributes.franchise_name],
+              team_name:item.team_name,
+              franchise_name:item.franchise_name,
+              franchise: {},
               member:[],
-              //...item
             }
         } 
     },
@@ -374,7 +390,7 @@ export default {
         .msgBoxConfirm(`Please confirm that you want to delete ${item.team_name}.`, {
           title: 'Please Confirm',
           size: 'sm',
-          okVariant: 'primary',
+          okVariant: 'danger',
           okTitle: 'Yes',
           cancelTitle: 'No',
           cancelVariant: 'outline-secondary',
@@ -394,12 +410,20 @@ export default {
       console.log(item)
         let url =`${this.GLOBAL.server}/teams`
         let httpsMethods = 'post'
+        let teamData = item
         //edit
         if (this.modalMethod == 'edit') {
-            url = `${this.GLOBAL.server}/team/${item.id}`
-            httpsMethods = 'patch'
+            url = `${this.GLOBAL.server}/teams/${item.id}`
+            httpsMethods = 'put'
+            teamData = {
+              team_name:item.team_name,
+              franchise_name:item.franchise_name,
+              franchise:this.franchiseData[item.franchise_name],
+              member_list:[]
+            }
+          console.log(teamData)
         }
-        this.$http[httpsMethods](url,{data:item})
+        this.$http[httpsMethods](url,{data:teamData})
           .then(res => { 
             console.log(res.data)
             if(res.data.data) {
@@ -407,17 +431,17 @@ export default {
                 this.makeToast('success',this.modalMethod)
             }
           }).catch(err => {
-            this.makeToast('fail','danger','update')
+            this.makeToast('danger','Update')
           })
     },
     DeleteTeams (item) {
         console.log(item)
-        let url =`${this.GLOBAL.server}teams/${item.id}`
+        let url =`${this.GLOBAL.server}/teams/${item.id}`
         let httpsMethods = 'delete'
         this.$http[httpsMethods](url)
           .then(res => { 
             console.log(res.data)
-            if(res.data.message === 'success') {
+            if(res.data.data) {
                 this.getTeams()
                 this.makeToast('success','Delete')
             }
@@ -435,6 +459,7 @@ export default {
     this.getUserType()
     this.getTeams()
     this.getFranchise()
+    this.getUsersList()
   },
   mounted() {
     this.$bus.$on('send-team', (team) => {this.EditTeams(team)})
