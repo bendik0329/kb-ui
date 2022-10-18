@@ -7,7 +7,7 @@ export default [
         resource: 'Agent',
         children: [
           {
-            title: 'Franchise (O)',
+            title: 'Franchise',
             route: 'organization-franchise',
             action: 'read',
             resource: 'owner',

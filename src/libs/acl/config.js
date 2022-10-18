@@ -19,7 +19,7 @@ export const ownerAbility = [
 export const franchiseAbility = [
   {
     action: 'read',
-    subject: 'franchise',
+    subject: 'Franchise',
   },
   {
     action: 'read',

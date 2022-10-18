@@ -12,7 +12,7 @@ function abilityCheck(userType) {
             },
             {
                 action: 'read',
-                subject: 'franchise',
+                subject: 'Franchise',
             },
             {
                 action: 'read',

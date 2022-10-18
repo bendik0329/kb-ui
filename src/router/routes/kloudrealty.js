@@ -29,7 +29,7 @@ axios.get(`${$theServer.server}/accesses`)
         resData.forEach( item => {
             routeAccess[item.attributes.label] = {}
             item.attributes.children.forEach(page => {
-                routeAccess[page.route][page.page] = page.Access
+                routeAccess[page.route][page.page] = filterResource(page.Access)
             })
         })
         dashboard.forEach(item => {
@@ -66,7 +66,11 @@ axios.get(`${$theServer.server}/accesses`)
     console.log('An error occurred:', error.response);
     });
 
-
+    function filterResource(resource) {
+        if(resource.includes('Agent')) return 'Agent'
+        if(resource.includes('Franchise')) return 'Franchise'
+        if(resource.includes('Owner')) return 'Owner'
+    }
 
 
 export default [

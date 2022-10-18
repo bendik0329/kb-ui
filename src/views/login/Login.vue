@@ -212,8 +212,8 @@ export default {
       variant: 'light',
       opacity: 1,
       blur: '3em',
-      userEmail: 'test1234@test.test',
-      password: 'test1234',
+      userEmail: 'franchise01@test.com',//test1234@test.test
+      password: 'franchise01@test.com',//test1234
       status: '',
       // validation rules
       required,
@@ -254,12 +254,17 @@ export default {
               },
               isLogin:true
             }
-            console.log(data)
+            console.log(data.ability)
             localStorage.setItem('userData', JSON.stringify(data))
             this.$ability.update(data.ability)
+            // setTimeout(this.pushToDashboard,5000)
             this.$router.push({name:'dashboard-analytics'})
           }
         })
+    },
+    pushToDashboard(){
+      console.log('go!!')
+      this.$router.push({name:'dashboard-analytics'})
     },
     checkLogin() {
       this.$http.get(`${this.GLOBAL.server}/login/check`)

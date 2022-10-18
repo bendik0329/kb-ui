@@ -54,22 +54,39 @@
             >
 
 
-            <!-- Column: franchise -->
-            <span
-              v-if="props.column.field === 'franchise'"
-              class="text-nowrap"
+            <!-- Column: franchise   Owner Only-->
+
+            <template
+              v-if="userType == 'owner'"
               >
               <span
-                v-if="props.row.franchise.data"
-                class="text-nowrap">{{ props.row.franchise.data.attributes.franchise_name }}</span>
-            </span>
+                v-if="props.column.field === 'franchise'"
+                class="text-nowrap"
+                >
+                <span
+                  v-if="props.row.franchise.data"
+                  class="text-nowrap">{{ props.row.franchise.data.attributes.franchise_name }}</span>
+              </span>
+            </template>
 
             <!-- Column: Member -->
             <span v-else-if="props.column.field === 'member'">
-              <b-badge v-for="item in props.row.members.data" :key ="item.id" 
-                variant="success"
-                class="mx-1"
-                > {{item.attributes.username}} </b-badge>
+              <template
+                v-if="userType == 'owner'"
+                >
+                <b-badge v-for="item in props.row.members.data" :key ="item.id" 
+                  variant="success"
+                  class="mx-1"
+                  > {{item.attributes.username}} </b-badge>
+              </template>
+              <template
+                v-else
+                >
+                <b-badge v-for="item in props.row.member_list" :key ="item.id" 
+                  variant="success"
+                  class="mx-1"
+                  > {{item}} </b-badge>
+              </template>
             </span>
 
             <!-- Column: Action -->
@@ -161,6 +178,7 @@
         <!-- modal -->
       <teams-modal
         ref="teamModal"
+        :user="userType"
         :team="tempTeam"
         :franchiseOption="franchiseOption"
         :userOption="userOption"
@@ -255,6 +273,7 @@ export default {
     franchiseData:{},
     userSelected: '',
     userOption: [],
+    userData:{},
     tempTeam:{},
     required,
     nameState: null,
@@ -294,56 +313,113 @@ export default {
       const url = `${this.GLOBAL.server}/users/me?populate=*`
       this.$http.get( url)
         .then(res => { 
+          console.log('123',res.data)
           this.userFranchise = res.data.franchise
-
+          if(this.userType == 'owner'){
+            console.log('owner')
+            this.getFranchise()
+            this.getUsersList()
+            this.getTeams()
+          }
+          if(this.userType == 'franchise'){
+            console.log('franchise',res.data.franchise.id)
+            this.getFranchise(`/${res.data.franchise.id}`)
+          }
+          
       })
     },
     getUsersList(){
+      //
       const url = `${this.GLOBAL.server}/users?populate=*`
       this.$http.get( url)
         .then(res => { 
           console.log('user',res.data)
           const userData = res.data
           const userList = []
+          const users = {}
           userData.forEach(item => {
-            console.log(item)
             userList.push(item.username)
-            
+            if(item.franchise){
+              users[item.franchise.franchise_name] = []
+            }else {
+              users['null'] = []
+            }
+
           })
+          console.log('users',users)
           console.log('list',userList)
           this.userOption = userList
       })
     },
-    getFranchise () {
+    getFranchise (id='') {
       this.loading = true
-      const url = `${this.GLOBAL.server}/franchises`
+      const url = `${this.GLOBAL.server}/franchises${id}?populate=*`
       this.$http.get( url)
         .then(res => { 
           const Franchises = res.data.data
-          Franchises.forEach(item => {
-            this.franchiseOption.push(item.attributes.franchise_name)
-            this.franchiseData[item.attributes.franchise_name] = {
-              id:item.id,
-              ...item.attributes
-            }
-          })
-          
+          if(this.userType == 'owner'){
+            Franchises.forEach(item => {
+              this.franchiseOption.push(item.attributes.franchise_name)
+              this.franchiseData[item.attributes.franchise_name] = {
+                id:item.id,
+                ...item.attributes
+              }
+            })
+          }else {
+            console.log(Franchises.attributes)
+            //teams
+            const teamsData = Franchises.attributes.teams.data
+            const newRow = []
+            teamsData.forEach(item => {
+              newRow.push({
+                id:item.id,
+                ...item.attributes
+              })
+            })
+            this.rows = newRow
+            //user list
+            const users = Franchises.attributes.members.data
+            
+            const userList = []
+            const userData = {}
+            users.forEach(user => {
+              userList.push(user.attributes.username)
+              userData[user.attributes.username] = {
+                id:user.id,
+                ...user.attributes
+              }
+            })
+            console.log('data',userData)
+            console.log('list',userList)
+            this.userData = userData
+            this.userOption = userList
+              this.columns = [
+                {
+                  label: 'Team Name',
+                  field: 'team_name',
+                },
+                {
+                  label: 'Member',
+                  field: 'member',
+                },
+                {
+                  label: 'Action',
+                  field: 'action',
+                },
+              ]
+              this.modalMethod = null
+            
+        }
       })
     },
     getTeams () {
 
-      if(this.userType == 'owner'){
-        console.log('owner')
-
-      }
-      if(this.userType == 'franchise'){
-        console.log('123')
-      }
       //filter api ?filters[franchise][$eq]=${}
 
         const url = `${this.GLOBAL.server}/teams?populate[0]=franchise&populate[1]=members`
         this.$http.get(url)
           .then(res => { 
+            console.log('res',res.data.data)
             if (res.data) {
               const Data = res.data.data
               const newRow = []
@@ -354,9 +430,6 @@ export default {
                 })
               })
               this.rows = newRow
-              //this.rows = res.data.data
-              //this.franchiseOption = res.data.franchises
-              //this.userOption = res.data.users
               this.modalMethod = null
             } 
         }).catch(err => {
@@ -367,11 +440,13 @@ export default {
         this.modalMethod = methods
         if (methods == 'create') {
             console.log(methods )
+            
             this.tempTeam = {
               id: Math.floor( new Date() / 1000),
               team_name:'',
               franchise: this.userFranchise,
-              member:[],
+              member_list:[],
+              members:[]
             }
         } else if (methods == 'edit') {
             console.log(methods , item)
@@ -411,6 +486,11 @@ export default {
         let url =`${this.GLOBAL.server}/teams`
         let httpsMethods = 'post'
         let teamData = item
+        const memberData = []
+        item.members.forEach(item => {
+          memberData.push(this.userData[item])
+        })
+        console.log(memberData)
         //edit
         if (this.modalMethod == 'edit') {
             url = `${this.GLOBAL.server}/teams/${item.id}`
@@ -431,7 +511,7 @@ export default {
                 this.makeToast('success',this.modalMethod)
             }
           }).catch(err => {
-            this.makeToast('danger','Update')
+            this.makeToast('danger',err)
           })
     },
     DeleteTeams (item) {
@@ -457,9 +537,7 @@ export default {
   },
   created() {
     this.getUserType()
-    this.getTeams()
-    this.getFranchise()
-    this.getUsersList()
+    
   },
   mounted() {
     this.$bus.$on('send-team', (team) => {this.EditTeams(team)})

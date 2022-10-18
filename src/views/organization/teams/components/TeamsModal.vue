@@ -41,6 +41,7 @@
               rules=""
             >
             <b-form-group
+              v-if="userType == 'owner'"
               label="Choose the Franchise"
               label-for="franchise-select"
               >
@@ -65,7 +66,7 @@
               >
               <v-select
                 id="user-select"
-                v-model="tempTeam.member"
+                v-model="tempTeam.members"
                 multiple
                 :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
                 :options="tempUserOption"
@@ -121,9 +122,16 @@ export default {
     userOption: {
         type: [Array,Object],
         default () {return{}}
+    },
+    user:{
+      type:String,
+      default () {return{}}
     }
   },
   watch: {
+    user() {
+      this.userType = this.user
+    },
     team () {
         this.tempTeam = this.team
     },
@@ -138,6 +146,7 @@ export default {
     return {
       headerBgVariant: 'light',
       headerTextVariant: 'dark',
+      userType:'',
       franchiseSelected: '',
       tempFranchiseOption: [],
       userSelected: [],
@@ -145,7 +154,7 @@ export default {
       tempTeam:{
         team_name:'',
         franchise_name:'',
-        member:[],
+        members:[],
       },
       name: '',
       nameState: null,
