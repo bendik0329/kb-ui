@@ -11,7 +11,6 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      {{method}}
       <validation-observer ref="simpleRules">
       <b-form
        ref="form"
@@ -42,7 +41,7 @@
               rules=""
             >
             <b-form-group
-              v-if="userType == 'owner'"
+              v-if="user == 'owner'"
               label="Choose the Franchise"
               label-for="franchise-select"
               >

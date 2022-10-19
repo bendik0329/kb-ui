@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h2>Teams</h2>
         <!-- search input -->
         <div class="custom-search d-flex justify-content-between align-items-center">
           <b-form-group class="mb-0">
@@ -56,28 +55,26 @@
 
             <!-- Column: franchise   Owner Only-->
 
-            <template
-              v-if="userType == 'owner'"
-              >
+            
               <span
                 v-if="props.column.field === 'franchise'"
                 class="text-nowrap"
                 >
                 <span
-                  v-if="props.row.franchise.data"
+                  v-if="props.row.franchise"
                   class="text-nowrap">{{ props.row.franchise.data.attributes.franchise_name }}</span>
               </span>
-            </template>
+            
 
             <!-- Column: Member -->
             <span v-else-if="props.column.field === 'member'">
               <template
                 v-if="userType == 'owner'"
                 >
-                <b-badge v-for="item in props.row.members.data" :key ="item.id" 
+                <b-badge v-for="item in props.row.member_list" :key ="item.id" 
                   variant="success"
                   class="mx-1"
-                  > {{item.attributes.username}} </b-badge>
+                  > {{item}} </b-badge>
               </template>
               <template
                 v-else

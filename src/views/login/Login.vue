@@ -212,8 +212,8 @@ export default {
       variant: 'light',
       opacity: 1,
       blur: '3em',
-      userEmail: 'franchise01@test.com',//test1234@test.test
-      password: 'franchise01@test.com',//test1234
+      userEmail: 'franchise01@test.com',//test1234@test.test,franchise01@test.com
+      password: 'franchise01@test.com',//test1234,franchise01@test.com
       status: '',
       // validation rules
       required,

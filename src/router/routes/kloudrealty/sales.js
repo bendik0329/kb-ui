@@ -7,15 +7,15 @@ export default [
         resource: 'Agent',
         action: 'read',
         pageTitle: 'Leads',
-          breadcrumb: [
-            {
-              text: 'Sales',
-            },
-            {
-              text: 'Leads',
-              active: true,
-            },
-          ],
+        breadcrumb: [
+          {
+            text: 'Sales',
+          },
+          {
+            text: 'Leads',
+            active: true,
+          },
+        ],
       },
     },
     {

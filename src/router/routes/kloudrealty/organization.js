@@ -9,6 +9,16 @@ export default [
       meta: {
         resource: 'owner',
         action: 'read',
+        pageTitle: 'Franchise',
+        breadcrumb: [
+          {
+            text: 'Organization',
+          },
+          {
+            text: 'Franchise',
+            active: true,
+          },
+        ],
       }
     },
     {
@@ -27,6 +37,16 @@ export default [
       meta: {
         resource: 'Agent',
         action: 'read',
+        pageTitle: 'Teams',
+        breadcrumb: [
+          {
+            text: 'Organization',
+          },
+          {
+            text: 'Teams',
+            active: true,
+          },
+        ],
       },
     },
     {
