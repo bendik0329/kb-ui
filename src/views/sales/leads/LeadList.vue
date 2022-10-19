@@ -436,6 +436,24 @@
       }
     },
     methods:{
+      getUserType(){
+      this.userType = JSON.parse(localStorage.getItem('userData')).role
+      const url = `${this.GLOBAL.server}/users/me?populate=*`
+      this.$http.get( url)
+        .then(res => { 
+          console.log('user',res.data)
+          this.userFranchise = res.data.franchise
+          if(this.userType == 'owner'){
+            console.log('owner')
+            
+          }
+          if(this.userType == 'franchise'){
+            console.log('franchise',res.data.franchise.id)
+            this.getFranchise(`/${res.data.franchise.id}`)
+          }
+          
+      })
+      },
       getLead() {
         this.$http.get(`${this.GLOBAL.server}/leads`)
         .then(res => {
