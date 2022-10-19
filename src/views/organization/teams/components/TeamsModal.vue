@@ -11,6 +11,7 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
+      {{method}}
       <validation-observer ref="simpleRules">
       <b-form
        ref="form"
@@ -63,6 +64,7 @@
             <b-form-group
               label="Choose the User"
               label-for="user-select"
+              v-if="method == 'edit'"
               >
               <v-select
                 id="user-select"
@@ -111,6 +113,10 @@ export default {
     Ripple,
   },
   props: {
+    method:{
+      type:String,
+      default () {return{}}
+    },
     team: {
         type: Object,
         default () {return{}}

@@ -178,6 +178,7 @@
         <!-- modal -->
       <teams-modal
         ref="teamModal"
+        :method="modalMethod"
         :user="userType"
         :team="tempTeam"
         :franchiseOption="franchiseOption"
@@ -329,7 +330,7 @@ export default {
       })
     },
     getUsersList(){
-      //
+      //owner
       const url = `${this.GLOBAL.server}/users?populate=*`
       this.$http.get( url)
         .then(res => { 
@@ -357,6 +358,7 @@ export default {
       this.$http.get( url)
         .then(res => { 
           const Franchises = res.data.data
+          //for owner
           if(this.userType == 'owner'){
             Franchises.forEach(item => {
               this.franchiseOption.push(item.attributes.franchise_name)
@@ -366,8 +368,9 @@ export default {
               }
             })
           }else {
+
             console.log(Franchises.attributes)
-            //teams
+            // for  franchise user get teams
             const teamsData = Franchises.attributes.teams.data
             const newRow = []
             teamsData.forEach(item => {
@@ -377,6 +380,7 @@ export default {
               })
             })
             this.rows = newRow
+
             //user list
             const users = Franchises.attributes.members.data
             
@@ -437,9 +441,9 @@ export default {
         })
     },
     openModal(methods, item) {
+      console.log(methods , item)
         this.modalMethod = methods
         if (methods == 'create') {
-            console.log(methods )
             
             this.tempTeam = {
               id: Math.floor( new Date() / 1000),
@@ -454,8 +458,8 @@ export default {
               id:item.id,
               team_name:item.team_name,
               franchise_name:item.franchise_name,
-              franchise: {},
-              member:[],
+              franchise: item.franchise,
+              member_list:item.member_list,
             }
         } 
     },
@@ -482,32 +486,45 @@ export default {
         })
     },
     EditTeams (item) {
-      console.log(item)
         let url =`${this.GLOBAL.server}/teams`
         let httpsMethods = 'post'
-        let teamData = item
+        //create
         const memberData = []
         item.members.forEach(item => {
           memberData.push(this.userData[item])
         })
-        console.log(memberData)
+        // console.log('123', item)
+        //add member data
+        let teamData = {
+          id:item.id,
+          team_name:item.team_name,
+          franchise_name:item.franchise_name,
+          franchise:item.franchise,
+          members:memberData,
+          member_list:item.members
+        }
         //edit
         if (this.modalMethod == 'edit') {
             url = `${this.GLOBAL.server}/teams/${item.id}`
             httpsMethods = 'put'
+            const franchiseData = item.franchise
+
+            if(this.userType == 'owner') {
+              franchiseData = this.franchiseData[item.franchise_name]
+            }
             teamData = {
               team_name:item.team_name,
               franchise_name:item.franchise_name,
-              franchise:this.franchiseData[item.franchise_name],
-              member_list:[]
+              franchise:franchiseData,
+              member_list:item.members,
+              members:memberData,
             }
-          console.log(teamData)
         }
         this.$http[httpsMethods](url,{data:teamData})
           .then(res => { 
             console.log(res.data)
             if(res.data.data) {
-                this.getTeams()
+                this.getUserType()
                 this.makeToast('success',this.modalMethod)
             }
           }).catch(err => {
@@ -522,7 +539,7 @@ export default {
           .then(res => { 
             console.log(res.data)
             if(res.data.data) {
-                this.getTeams()
+                this.getUserType()
                 this.makeToast('success','Delete')
             }
           })
