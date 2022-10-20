@@ -268,14 +268,19 @@ export default {
       type: Object,
       default () {return{}}
     },
-    
+    userType:{
+      type:String,
+      default () {return{}}
+    }
   },
   watch: {
     lead () {
         this.tempLead = this.lead
-        console.log(this.tempLead)
+        console.log('lead',this.tempLead)
     },
-    
+    userType() {
+      console.log('user type',this.userType)
+    }
 
   },
   data() {

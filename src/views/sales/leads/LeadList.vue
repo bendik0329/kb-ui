@@ -258,10 +258,11 @@
             </b-pagination>
   
           </b-col>
-  
+          
         </b-row>
       </div>
       <leads-modal
+        :userType="userType"
         :lead="tempLead"
         :typeOptions="typeOptions"
         ></leads-modal>
@@ -379,6 +380,7 @@
     },
     data() {
       return {
+        userType:'',
         selectAll:false,
         columns:[
           { key:'check' },
@@ -415,6 +417,15 @@
         },
         leadsData:[],
         data:[],
+        dataMata:{
+          from:'',
+          to:'',
+          of:'',
+        },
+        perPage: 5,
+        pageOptions: [3, 5, 10],
+        totalRows: 1,
+        currentPage: 1,
         filteredLeadsData:{},
       }
     },
@@ -433,6 +444,9 @@
           console.log('Unread Leads')
           this.data = this.filteredLeadsData['new']
         }
+      },
+      data(){
+        this.dataMata.of = this.data.length
       }
     },
     methods:{
@@ -449,7 +463,7 @@
           }
           if(this.userType == 'franchise'){
             console.log('franchise',res.data.franchise.id)
-            this.getFranchise(`/${res.data.franchise.id}`)
+            this.getFranchise(`/${this.userFranchise.id}`)
           }
           
       })
@@ -481,7 +495,8 @@
               })
             })
             console.log(leadsData)
-            this.data = leadsData
+            this.data = Franchises.leads.data
+            console.log(this.dataMata)
           }
         })
       },
@@ -533,11 +548,18 @@
           email:'',
           address:'',
           rating:'',
+          franchiseID:this.userFranchise.id.toString(),
+          franchise:this.userFranchise,
         }
+        console.log('new',this.tempLead)
         this.updateMethod = methods
         if (methods ==='edit') {
-            this.tempLead = item
-            this.updateMethod = 'edit'
+          console.log('edit')
+          this.tempLead = {
+            id:item.id,
+            ...item.attributes
+          }
+          this.updateMethod = 'edit'
         }
       },
       openStatusModal (item ) {
@@ -552,7 +574,7 @@
         let url = `${this.GLOBAL.server}/leads`
 
         if(this.updateMethod === 'edit') {
-            httpMethod = 'patch'
+            httpMethod = 'put'
             url = `${this.GLOBAL.server}/leads/${item.id}`
         }
         this.$http[httpMethod](url,{data:item})
@@ -561,7 +583,7 @@
             if(res.data.data){
 
               this.makeToast('success','success','Update Lead')
-              this.getLead()
+              this.getUserType()
             }
             this.updateMethod = ''
             
@@ -579,7 +601,7 @@
       showMsgBox(item) {
       this.boxOne = ''
       this.$bvModal
-        .msgBoxConfirm(`Please confirm that you want to delete ${item.name}.`, {
+        .msgBoxConfirm(`Please confirm that you want to delete ${item.attributes.name}.`, {
           title: 'Please Confirm',
           size: 'sm',
           okVariant: 'danger',
@@ -605,8 +627,8 @@
         this.$http[httpsMethods](url)
           .then(res => { 
             console.log(res.data)
-            this.makeToast(res.data.result,res.data.message,'Delete Lead')
-            this.getLead()
+            this.makeToast('success','success','Delete Lead')
+            this.getUserType()
           })
       },
       updateStatus (item){
