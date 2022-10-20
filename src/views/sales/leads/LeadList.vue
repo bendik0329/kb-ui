@@ -445,7 +445,7 @@
           this.userFranchise = res.data.franchise
           if(this.userType == 'owner'){
             console.log('owner')
-            
+            this.getLead()
           }
           if(this.userType == 'franchise'){
             console.log('franchise',res.data.franchise.id)
@@ -453,6 +453,37 @@
           }
           
       })
+      },
+      getFranchise (id='') {
+      this.loading = true
+      const url = `${this.GLOBAL.server}/franchises${id}?populate=*`
+      this.$http.get( url)
+        .then(res => { 
+          console.log(res.data.data)
+          const Franchises = {
+            id:res.data.data.id,
+            ...res.data.data.attributes
+          }
+          //for owner
+          if(this.userType == 'owner'){
+            console.log('owner')
+          
+          }else {
+            //for other user
+            console.log('other')
+            console.log('leads',Franchises.leads)
+            const leads = Franchises.leads.data
+            const leadsData = []
+            leads.forEach(lead => {
+              leadsData.push({
+                id:lead.id,
+                ...lead.attributes
+              })
+            })
+            console.log(leadsData)
+            this.data = leadsData
+          }
+        })
       },
       getLead() {
         this.$http.get(`${this.GLOBAL.server}/leads`)
@@ -613,7 +644,8 @@
       },
     },
     created(){
-      this.getLead()
+      this.getUserType()
+      
     },
     mounted(){
       this.$bus.$on('update-lead', (lead) => {this.updateLead(lead)})
