@@ -275,12 +275,20 @@ export default {
   },
   watch: {
     lead () {
+        //owner
         this.tempLead = this.lead
-        console.log('lead',this.tempLead)
+        console.log('lead',this.tempLead,this.userType)
+        if(this.userType == 'franchise' ){
+          this.tempTypeOptions = ['Agent','Buyer','Seller']
+          this.tempSourceOptions = ['System','Advertisement',`${this.tempLead.franchise.franchise_name}`,'Agent Referral','Client Referral','Social','Web','Word of Mouth','Other']
+          this.tempCategoryOptions = ['Franchise','Team','Agent',]
+        }else if(this.userType == 'agent') {
+          this.tempTypeOptions = ['Buyer','Seller']
+          this.tempSourceOptions = ['System','Advertisement',`${this.tempLead.franchise.franchise_name}`,'Agent Referral','Client Referral','Social','Web','Word of Mouth','Other']
+          this.tempCategoryOptions = ['Team','Agent',]
+        }
     },
-    userType() {
-      console.log('user type',this.userType)
-    }
+    
 
   },
   data() {

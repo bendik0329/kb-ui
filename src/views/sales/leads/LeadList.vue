@@ -224,7 +224,7 @@
             sm="6"
             class="d-flex align-items-center justify-content-center justify-content-sm-start"
           >
-            <span class="text-muted">Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ dataMeta.of }} entries</span>
+            <span class="text-muted">Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ pageMeta.pagination.total }} entries</span>
           </b-col>
           <!-- Pagination -->
           <b-col
@@ -417,11 +417,7 @@
         },
         leadsData:[],
         data:[],
-        dataMata:{
-          from:'',
-          to:'',
-          of:'',
-        },
+        pageMeta:{},
         perPage: 5,
         pageOptions: [3, 5, 10],
         totalRows: 1,
@@ -445,9 +441,6 @@
           this.data = this.filteredLeadsData['new']
         }
       },
-      data(){
-        this.dataMata.of = this.data.length
-      }
     },
     methods:{
       getUserType(){
@@ -484,19 +477,25 @@
           
           }else {
             //for other user
-            console.log('other')
-            console.log('leads',Franchises.leads)
-            const leads = Franchises.leads.data
-            const leadsData = []
-            leads.forEach(lead => {
-              leadsData.push({
-                id:lead.id,
-                ...lead.attributes
+            const leadURL = `https://uat.kloudrealty.com/api/api/leads?populate=*&filters[franchiseID][$eq]=${Franchises.id}`
+            this.$http.get(leadURL)
+              .then(res => {
+                console.log('123',res.data)
+                console.log('meta',res.data.meta)
+                console.log('other')
+                console.log('leads',Franchises.leads)
+                const leads = res.data.data
+                const leadsData = []
+                leads.forEach(lead => {
+                  leadsData.push({
+                    id:lead.id,
+                    ...lead.attributes
+                  })
+                })
+                console.log(leadsData)
+                this.data = leads
+                this.pageMeta = res.data.meta
               })
-            })
-            console.log(leadsData)
-            this.data = Franchises.leads.data
-            console.log(this.dataMata)
           }
         })
       },
