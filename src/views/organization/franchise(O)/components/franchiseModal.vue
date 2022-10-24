@@ -56,7 +56,7 @@
         <validation-provider
               #default="{ errors }"
               name="Phone Number"
-              rules="required"
+              rules="required|integer|min:10"
             >
             <b-form-group
               label="Phone Number"

@@ -126,7 +126,7 @@
           <validation-provider
                 #default="{ errors }"
                 name="Email"
-                rules="required"
+                rules="required|email"
               >
               <b-form-group
                 label="Email"
@@ -144,7 +144,7 @@
           <validation-provider
                 #default="{ errors }"
                 name="Phone"
-                rules="required"
+                rules="required|integer|min:10"
               >
               <b-form-group
                 label="Phone"
@@ -257,6 +257,7 @@ export default {
     BDropdownItem,
     vSelect,
     required,
+    email,
     BModal,
   },
   directives: {

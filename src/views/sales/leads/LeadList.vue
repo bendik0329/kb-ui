@@ -31,10 +31,9 @@
               </template>
           </v-select>
           <!-- Search -->
-          <b-form-input
-              v-model="searchQuery"
+          <leads-search
+              :leads="leadsData"
               class="d-inline-block mr-1"
-              placeholder="Search..."
               />
           
           </b-col>
@@ -224,7 +223,7 @@
             sm="6"
             class="d-flex align-items-center justify-content-center justify-content-sm-start"
           >
-            <span class="text-muted">Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ pageMeta.pagination.total }} entries</span>
+            <span class="text-muted">Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ pageMeta.total }} entries</span>
           </b-col>
           <!-- Pagination -->
           <b-col
@@ -284,6 +283,7 @@
   import { onUnmounted } from '@vue/composition-api'
   import store from '@/store'
 
+  import LeadsSearch from './LeadsSearch.vue'
   import LeadsModal from './LeadsModal.vue'
   import LeadStatusModal from './LeadStatusModal.vue'
 
@@ -310,6 +310,7 @@
       BDropdownItem,
       BPagination,
       BTooltip,
+      LeadsSearch,
       LeadsModal,
       vSelect,
       LeadStatusModal,
@@ -417,7 +418,12 @@
         },
         leadsData:[],
         data:[],
-        pageMeta:{},
+        pageMeta:{
+          pageSize:'',
+          pageCount:'',
+          page:'',
+          total:''
+        },
         perPage: 5,
         pageOptions: [3, 5, 10],
         totalRows: 1,
@@ -480,9 +486,7 @@
             const leadURL = `https://uat.kloudrealty.com/api/api/leads?populate=*&filters[franchiseID][$eq]=${Franchises.id}`
             this.$http.get(leadURL)
               .then(res => {
-                console.log('123',res.data)
                 console.log('meta',res.data.meta)
-                console.log('other')
                 console.log('leads',Franchises.leads)
                 const leads = res.data.data
                 const leadsData = []
@@ -494,7 +498,9 @@
                 })
                 console.log(leadsData)
                 this.data = leads
-                this.pageMeta = res.data.meta
+                this.leadsData = leads
+                this.pageMeta = res.data.meta.pagination
+                this.filterLead(leads)
               })
           }
         })
@@ -502,7 +508,6 @@
       getLead() {
         this.$http.get(`${this.GLOBAL.server}/leads`)
         .then(res => {
-          console.log(res.data)
           this.leadsData = res.data.data
           this.data = res.data.data
           this.typeOptions = res.data.typeOptions
@@ -519,13 +524,13 @@
         const today = new Date().toISOString().split('T', 1)[0]
 
         leads.filter(lead => {
-          if(lead.attributes.status == 'new'){
+          if(lead.attributes.status == 'New'){
             newLeads.push(lead)
           }
           if(lead.attributes.status !== 'qualified' && lead.status !== 'unqualified'){
             openLeads.push(lead)
           }
-          const createdDay = lead.attributes.created.split('T', 1)[0]
+          const createdDay = lead.attributes.createdAt.split('T', 1)[0]
           if(today == createdDay){
             todayLeads.push(lead)
           }
@@ -550,13 +555,15 @@
           franchiseID:this.userFranchise.id.toString(),
           franchise:this.userFranchise,
         }
-        console.log('new',this.tempLead)
         this.updateMethod = methods
         if (methods ==='edit') {
-          console.log('edit')
           this.tempLead = {
             id:item.id,
-            ...item.attributes
+            ...item.attributes,
+            franchise:{
+              id:item.attributes.franchise.data.id,
+              ...item.attributes.franchise.data.attributes
+            }
           }
           this.updateMethod = 'edit'
         }
@@ -663,6 +670,13 @@
         }
         return  ratingColor[rating]
       },
+      pagination(total,currentPage,pageSize) {
+        return {
+          from: pageSize * (currentPage - 1) ,
+          to: pageSize * (currentPage - 1) ,
+          of: total,
+        }
+      },
     },
     created(){
       this.getUserType()
@@ -699,5 +713,6 @@
   
 <style lang="scss">
   @import '@core/scss/vue/libs/vue-select.scss';
+  @import '@core/scss/vue/libs/vue-autosuggest.scss';
 </style>
   
