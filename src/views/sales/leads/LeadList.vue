@@ -83,6 +83,8 @@
         class="position-relative"
         :small="true"
         :hover="true"
+        selectable
+        @row-selected="onRowSelected"
         >
         <template #head(check)>
           <b-form-checkbox
@@ -428,7 +430,7 @@
         pageOptions: [3, 5, 10],
         totalRows: 1,
         currentPage: 1,
-        filteredLeadsData:{},
+        SearchQuery:{},
       }
     },
     watch:{
@@ -449,6 +451,10 @@
       },
     },
     methods:{
+      onRowSelected(items) {
+        this.selected = items
+        console.log(items)
+      },
       getUserType(){
       this.userType = JSON.parse(localStorage.getItem('userData')).role
       const url = `${this.GLOBAL.server}/users/me?populate=*`
@@ -637,6 +643,11 @@
             this.getUserType()
           })
       },
+      selectLeads(item){
+        console.log('select')
+        this.openLeadsModal('edit',item)
+        this.$refs['modal-lead-update'].show()
+      },
       updateStatus (item){
         let url =`${this.GLOBAL.server}/sales/leads/status/${item.id}`
         let httpsMethods = 'patch'
@@ -685,10 +696,14 @@
     mounted(){
       this.$bus.$on('update-lead', (lead) => {this.updateLead(lead)})
       this.$bus.$on('status-change', (status) => {this.updateStatus(status)})
+      this.$bus.$on('selected-lead', (lead) => {
+        this.selectLeads(lead)
+      })
     },
     beforeDestroy(){
       this.$bus.$off('update-lead')
       this.$bus.$off('status-change')
+      this.$bus.$off('selected-lead')
     }
   }
 </script>

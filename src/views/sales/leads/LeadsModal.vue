@@ -2,7 +2,7 @@
     <b-modal
       id="modal-lead-update"
       size="xl"
-      ref="my-modal"
+      ref="modal-lead-update"
       :header-bg-variant="headerBgVariant"
       :header-text-variant="headerTextVariant"
       title="Create Lead"
@@ -168,9 +168,12 @@
           <b-form-group
             label="Enter Address"
             label-for="address"
-          >
+          >  
+            <input type="text" id="address"
+              ref="address">
             <b-form-input
-              id="address"
+              id="autocomplete"
+              
               placeholder="Enter Address"
               :state="errors.length > 0 ? false:null"
               v-model="tempLead.address"
@@ -326,7 +329,7 @@ export default {
           console.log('validate OK!!')
           this.$bus.$emit('update-lead', this.tempLead)
           this.$nextTick(() => {
-            this.$refs['my-modal'].toggle('#toggle-btn')
+            this.$refs['modal-lead-update'].toggle('#toggle-btn')
           })
         }
       })
@@ -350,9 +353,18 @@ export default {
     //   this.$bus.$emit('send-franchise', this.tempFranchise)
       // Hide the modal manually
       this.$nextTick(() => {
-        this.$refs['my-modal'].toggle('#toggle-btn')
+        this.$refs['modal-lead-update'].toggle('#toggle-btn')
       })
     },
+  },
+  mounted(){
+    console.log(this.$refs['modal-lead-update'])
+    window.onload = () =>{
+        
+      new google.maps.places.Autocomplete(
+        document.getElementById("address")
+      )
+      }
   }
 }
 </script>

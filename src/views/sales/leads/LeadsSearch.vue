@@ -2,6 +2,7 @@
     <vue-autosuggest
       :suggestions="filteredOptions"
       :input-props="inputProps"
+      :get-suggestion-value="getSuggestionValue"
       :on-selected="onSelected"
       :limit="10"
       @input="onInputChange"
@@ -33,9 +34,6 @@
     position: relative;
     width: 100%;
   }
-//    ul{
-//     list-style: none;
-//    }
   </style>
 
 
@@ -55,6 +53,12 @@
             default () {return{}}
         }
     },
+    watch:{
+        leads(){
+            this.datasuggest = this.leads
+            console.log('suggest',this.datasuggest)
+        },
+    },
     data() {
       return {
         datasuggest: [],
@@ -68,17 +72,21 @@
       }
     },
     created() {
+       
+
       this.$http.get('/autosuggest/data')
         .then(res => {
             console.log('old data',res.data) 
-            this.datasuggest = res 
+            //this.datasuggest = res 
         })
     },
     methods: {
+      getSuggestionValue(suggestion) {
+        this.$bus.$emit('selected-lead', suggestion.item)
+        return suggestion.item.attributes.name;
+      },
       onSelected(option) {
-        console.log(option)
-        this.selected = option.item.id
-        console.log(this.selected)
+        this.selected = option.item
       },
       onInputChange(text) {
         if (text === '' || text === undefined) {
@@ -95,7 +103,6 @@
         this.filteredOptions = [{
           data: filteredLeads,
         }]
-       console.log(filteredLeads)
       },
       initialsName(name){
         if(name.includes('-')) {
