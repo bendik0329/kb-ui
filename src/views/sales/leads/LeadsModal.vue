@@ -169,6 +169,8 @@
             label="Enter Address"
             label-for="address"
           >  
+            <vue-google-autocomplete id="map" classname="form-control" placeholder="Start typing" v-on:placechanged="getAddressData">
+            </vue-google-autocomplete>
             <input type="text" id="address"
               ref="address">
             <b-form-input
@@ -241,6 +243,7 @@ import {
 import vSelect from 'vue-select'
 import { required, email } from '@validations'
 import Ripple from 'vue-ripple-directive'
+import VueGoogleAutocomplete from "vue-google-autocomplete";
 
 export default {
   components: {
@@ -262,6 +265,7 @@ export default {
     required,
     email,
     BModal,
+    VueGoogleAutocomplete
   },
   directives: {
     'b-modal': VBModal,
