@@ -169,17 +169,10 @@
             label="Enter Address"
             label-for="address"
           >  
-            <vue-google-autocomplete id="map" classname="form-control" placeholder="Start typing" v-on:placechanged="getAddressData">
-            </vue-google-autocomplete>
-            <input type="text" id="address"
-              ref="address">
-            <b-form-input
-              id="autocomplete"
-              
-              placeholder="Enter Address"
-              :state="errors.length > 0 ? false:null"
-              v-model="tempLead.address"
-            />
+            <leads-modal-address
+             :state="errors.length > 0 ? false:null"
+              class="position-relative"
+              ></leads-modal-address>
           </b-form-group>
           <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -243,7 +236,7 @@ import {
 import vSelect from 'vue-select'
 import { required, email } from '@validations'
 import Ripple from 'vue-ripple-directive'
-import VueGoogleAutocomplete from "vue-google-autocomplete";
+import leadsModalAddress from "./LeadsModalAddress.vue";
 
 export default {
   components: {
@@ -265,7 +258,7 @@ export default {
     required,
     email,
     BModal,
-    VueGoogleAutocomplete
+    leadsModalAddress
   },
   directives: {
     'b-modal': VBModal,
@@ -362,13 +355,14 @@ export default {
     },
   },
   mounted(){
-    console.log(this.$refs['modal-lead-update'])
-    window.onload = () =>{
-        
-      new google.maps.places.Autocomplete(
-        document.getElementById("address")
-      )
-      }
-  }
+    console.log('ref',this.$refs['modal-lead-update'])
+    this.$bus.$on('send-address', (address) => {
+        console.log(address)
+        //const addressString = 
+      })
+  },
+  beforeDestroy(){
+      this.$bus.$off('send-address')
+    }
 }
 </script>

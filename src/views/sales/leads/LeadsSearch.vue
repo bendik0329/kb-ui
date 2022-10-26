@@ -40,7 +40,6 @@
   <script>
   import { VueAutosuggest } from 'vue-autosuggest'
   import { BAvatar, BCardText } from 'bootstrap-vue'
-  
   export default {
     components: {
       VueAutosuggest,

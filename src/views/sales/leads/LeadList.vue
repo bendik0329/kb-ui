@@ -646,7 +646,7 @@
       selectLeads(item){
         console.log('select')
         this.openLeadsModal('edit',item)
-        this.$refs['modal-lead-update'].show()
+        //this.$refs['modal-lead-update'].show()
       },
       updateStatus (item){
         let url =`${this.GLOBAL.server}/sales/leads/status/${item.id}`
@@ -729,5 +729,6 @@
 <style lang="scss">
   @import '@core/scss/vue/libs/vue-select.scss';
   @import '@core/scss/vue/libs/vue-autosuggest.scss';
+  
 </style>
   

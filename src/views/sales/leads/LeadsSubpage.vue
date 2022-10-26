@@ -36,7 +36,7 @@ export default {
 <style lang="scss">
 @import '@core/scss/vue/libs/vue-flatpicker.scss';
 @import '@core/scss/vue/libs/chart-apex.scss';
-.doughnut{
-  position: relative;
-}
+  .pac-container{
+    z-index: 1060;
+  }
 </style>
