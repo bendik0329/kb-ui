@@ -2,34 +2,24 @@
   <section id="home-page">
       <div class="block-bg"></div>
       <div  class="row justify-content-center align-items-center h-100">
-        <div class="col-8 border-1">
-          <h2 class="text-center mb-3">Find an Agent Who Knows Your Market Best</h2>
-          <div class="search-bar d-flex justify-content-between">
-            <vue-autosuggest
-              class="w-50"
-              v-model="query"
-              :suggestions="suggestions"
-              :input-props="inputProps"
-              :section-configs="sectionConfigs"
-              :render-suggestion="renderSuggestion"
-              :limit="10"
-              @input="fetchResults"
-              />
-              <v-select
-                class="w-25  mx-1 "
-                :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-                multiple
-                taggable
-                push-tags
-                placeholder="Any Specialization"
-                label="title"
-                />
-                <b-button class="w-25" variant="gradient-dark">
-                  Search
-                </b-button>
-              </div>
-            </div>
+        <div class="col-8 border-1" >
+          <h2 class="text-center mb-3">Need Home? Easy as 1, 2, 3.</h2>
+          <b-card
+          text-variant="white"
+          bg-variant="primary"
+          class="position-static"
+          md="6"
+        lg="4"
+          >
+          <b-row>
+            <b-col cols="8">
+              <form-wizard-vertical />
+            </b-col>
+          </b-row>
+          </b-card>
           </div>
+        </div>
+      </div>
     </section>
 </template>
 
@@ -41,7 +31,7 @@
     z-index: -1;
     width: 100vw;
     height: 100vh;
-    background-image: url('../../../../public/homepage.jpeg');
+    background-image: url('../../../../public/background2.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
     filter:brightness(.7);
@@ -57,15 +47,22 @@
     font-size: 3em;
     font-weight: bold;
   }
+  @import '@core/scss/vue/libs/vue-wizard.scss';
+  @import '@core/scss/vue/libs/vue-select.scss';
 }
 </style>
 <script>
 import { VueAutosuggest } from 'vue-autosuggest'
 import vSelect from 'vue-select'
-import { BAvatar, BCardText, BButton } from 'bootstrap-vue'
+import { BAvatar, BCardText, BButton, BRow, BCol } from 'bootstrap-vue'
+import FormWizardVertical from './HomeSteps.vue'
+
 
 export default {
   components: {
+    BRow,
+    BCol,
+    FormWizardVertical,
     VueAutosuggest,
     vSelect,
     BAvatar,
