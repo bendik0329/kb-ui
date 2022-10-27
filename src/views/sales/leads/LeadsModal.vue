@@ -161,20 +161,20 @@
           
           <!-- address -->
           <validation-provider
-                #default="{ errors }"
+                #default="{ }"
                 name="address"
-                rules="required"
+                rules=""
               >
           <b-form-group
             label="Enter Address"
             label-for="address"
           >  
             <leads-modal-address
-             :state="errors.length > 0 ? false:null"
+              :tempAddress=tempLead.address
               class="position-relative"
               ></leads-modal-address>
           </b-form-group>
-          <small class="text-danger">{{ errors[0] }}</small>
+          <small class="text-danger">{{ addressErr }}</small>
           </validation-provider>
         </b-col>
 
@@ -237,6 +237,7 @@ import vSelect from 'vue-select'
 import { required, email } from '@validations'
 import Ripple from 'vue-ripple-directive'
 import leadsModalAddress from "./LeadsModalAddress.vue";
+import { filterAddress } from'@/@core/mixins/ui/address'
 
 export default {
   components: {
@@ -316,6 +317,7 @@ export default {
         team:'',
         agent:'',
       },
+      addressErr:'',
     }
   },
   methods: {
@@ -355,10 +357,12 @@ export default {
     },
   },
   mounted(){
-    console.log('ref',this.$refs['modal-lead-update'])
     this.$bus.$on('send-address', (address) => {
-        console.log(address)
-        //const addressString = 
+        console.log('1',address)
+        console.log('2',filterAddress(address))
+        const adrress = filterAddress(address)
+        this.tempLead.address = adrress.addressString
+        this.addressErr = adrress.message
       })
   },
   beforeDestroy(){

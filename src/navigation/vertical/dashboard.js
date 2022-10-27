@@ -6,21 +6,8 @@ export default [
     title: 'Dashboards',
     icon: 'HomeIcon',
     tagVariant: 'light-warning',
+    route: 'dashboard-ecommerce',
     action: 'read',
     resource: 'Agent',
-    children: [
-      {
-        title: 'eCommerce',
-        route: 'dashboard-ecommerce',
-        action: 'read',
-        resource: 'Agent',
-      },
-      {
-        title: 'Analytics',
-        route: 'dashboard-analytics',
-        action: 'read',
-        resource: 'Agent',
-      },
-    ],
   },
 ]

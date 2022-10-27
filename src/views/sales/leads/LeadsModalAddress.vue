@@ -3,6 +3,7 @@
     <vue-google-autocomplete
       ref="address"
       id="map"
+      v-model="tempInput"
       classname="form-control"
       placeholder="Please type your address"
       :country="['us']"
@@ -22,10 +23,18 @@
        
         VueGoogleAutocomplete, 
       },
-  
+      
+      props:{
+        tempAddress: {
+          type: String,
+          default () {return{}}
+        },
+      },
+
       data(){
         return{
           address: "",
+          tempInput:""
         };
       },
   
@@ -33,6 +42,9 @@
         // To demonstrate functionality of exposed component functions
         // Here we make focus on the user input
         this.$refs.address.focus();
+        if(this.tempAddress){
+          this.tempInput = this.tempAddress
+        }
       },
   
       methods: {

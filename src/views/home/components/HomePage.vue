@@ -4,8 +4,7 @@
       <div  class="row justify-content-center align-items-center h-100">
         <div class="col-6 border-1" >
           <h2 class="text-center mb-3">Need a home? Easy as 1, 2, 3.</h2>
-            <card-navigation />
-          </div>
+          <card-navigation />
         </div>
       </div>
     </section>

@@ -52,3 +52,5 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
 
 // Strip all the tags from markup and return plain text
 export const filterTags = value => value.replace(/<\/?[^>]+(>|$)/g, '')
+
+

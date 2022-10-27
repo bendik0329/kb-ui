@@ -183,6 +183,7 @@
             <b-dropdown
               variant="link"
               toggle-class="p-0"
+              dropleft
               no-caret
               :right="$store.state.appConfig.isRTL"
             >
@@ -225,7 +226,7 @@
             sm="6"
             class="d-flex align-items-center justify-content-center justify-content-sm-start"
           >
-            <span class="text-muted">Showing {{ dataMeta.from }} to {{ dataMeta.to }} of {{ pageMeta.total }} entries</span>
+            <span class="text-muted">Showing {{ pageMeta.from }} to {{ pageMeta.to }} of {{ pageMeta.of }} entries</span>
           </b-col>
           <!-- Pagination -->
           <b-col
@@ -453,7 +454,6 @@
     methods:{
       onRowSelected(items) {
         this.selected = items
-        console.log(items)
       },
       getUserType(){
       this.userType = JSON.parse(localStorage.getItem('userData')).role
@@ -467,7 +467,6 @@
             this.getLead()
           }
           if(this.userType == 'franchise'){
-            console.log('franchise',res.data.franchise.id)
             this.getFranchise(`/${this.userFranchise.id}`)
           }
           
@@ -478,7 +477,6 @@
       const url = `${this.GLOBAL.server}/franchises${id}?populate=*`
       this.$http.get( url)
         .then(res => { 
-          console.log(res.data.data)
           const Franchises = {
             id:res.data.data.id,
             ...res.data.data.attributes
@@ -489,11 +487,10 @@
           
           }else {
             //for other user
-            const leadURL = `https://uat.kloudrealty.com/api/api/leads?populate=*&filters[franchiseID][$eq]=${Franchises.id}`
+            const leadURL = `${this.GLOBAL.server}/leads?populate=*&filters[franchiseID][$eq]=${Franchises.id}`
             this.$http.get(leadURL)
               .then(res => {
-                console.log('meta',res.data.meta)
-                console.log('leads',Franchises.leads)
+                console.log('res',res)
                 const leads = res.data.data
                 const leadsData = []
                 leads.forEach(lead => {
@@ -505,7 +502,9 @@
                 console.log(leadsData)
                 this.data = leads
                 this.leadsData = leads
-                this.pageMeta = res.data.meta.pagination
+                const pagination = res.data.meta.pagination
+                this.pageMeta = this.pagination(pagination.total,pagination.currentPage,pagination.pageSize)
+                console.log('pageMeta',this.pageMeta)
                 this.filterLead(leads)
               })
           }
@@ -682,8 +681,15 @@
         return  ratingColor[rating]
       },
       pagination(total,currentPage,pageSize) {
+        if(pageSize > total) {
+          return {
+            from: 1 ,
+            to: total ,
+            of: total,
+        }
+        }
         return {
-          from: pageSize * (currentPage - 1) ,
+          from: pageSize * (currentPage - 1) + 1 ,
           to: pageSize * (currentPage - 1) ,
           of: total,
         }

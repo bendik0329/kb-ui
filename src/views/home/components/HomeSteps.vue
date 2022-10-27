@@ -72,7 +72,7 @@
 
 <script>
 import {
-  BRow, BCol, BCard, BTab, BTabs, BCardText, BCardTitle, BCardHeader, BMedia, BMediaAside, BAvatar, BMediaBody, BBadge, BCardBody, BButton, BFormInput,
+  BRow, BCol, BCard, BTab, BTabs, BCardText, BCardTitle, BCardHeader, BMedia, BMediaAside, BAvatar, BMediaBody, BBadge, BCardBody, BButton, BFormInput,BFormGroup,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 
@@ -89,6 +89,7 @@ export default {
     BBadge,
     BCardHeader,
     BMedia,
+    BFormGroup,
     BFormInput,
     BMediaAside,
     BAvatar,
