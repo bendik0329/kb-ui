@@ -13,7 +13,7 @@
             >
               <b-card-title>It's like Tinder for houses</b-card-title>
               <b-card-text>
-                The right agent will go along way. Simply type in your zip code. We'll find an agent close to you or the area you are looking for. For more information on the home buying/selling process, click on the FAQ tab above.
+                The right agent will go along way. Simply type in the your location or the location of the area you are looking in. We'll find an agent close by. 
               </b-card-text>
               <b-form-group
               label="Zip Code"
@@ -22,7 +22,7 @@
             >
               <b-form-input
                 id="zip"
-                placeholder="ex. 77068"
+                placeholder="ex. Houston, TX or 77068"
               />
             </b-form-group>
             <br>
@@ -32,6 +32,9 @@
               >
                 Find my Agent
               </b-button>
+              <b-card-text>
+              <br>For more information on the home buying or selling process, click on the <a href="faq"> FAQ </a> tab above.
+              </b-card-text>
             </b-tab>
             <b-tab title="2. Find a Lender">
               

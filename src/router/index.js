@@ -66,6 +66,16 @@ const router = new VueRouter({
         }
       },
       {
+        path:'/faq',
+        name:'faq',
+        component: () => import('@/views/home/components/Faq.vue'),
+        meta: {
+          layout: 'full',
+          resource: 'ACL',
+          action: 'read',
+        }
+      },
+      {
         path:'/findAgent',
         name:'findAgent',
         component: () => import('@/views/home/components/FindAgent.vue'),
