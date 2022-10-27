@@ -13,6 +13,11 @@
             </router-link>
           </b-nav-item>
           <b-nav-item class="font-weight-bolder">
+            <router-link :to="{ name: 'faq'}">
+              FAQ
+            </router-link>
+          </b-nav-item>
+          <b-nav-item class="font-weight-bolder">
             <router-link :to="{ name: 'findAgent'}">
               Find Agent
             </router-link>

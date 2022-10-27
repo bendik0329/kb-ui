@@ -2,21 +2,9 @@
   <section id="home-page">
       <div class="block-bg"></div>
       <div  class="row justify-content-center align-items-center h-100">
-        <div class="col-8 border-1" >
-          <h2 class="text-center mb-3">Need Home? Easy as 1, 2, 3.</h2>
-          <b-card
-          text-variant="white"
-          bg-variant="primary"
-          class="position-static"
-          md="6"
-        lg="4"
-          >
-          <b-row>
-            <b-col cols="8">
-              <form-wizard-vertical />
-            </b-col>
-          </b-row>
-          </b-card>
+        <div class="col-6 border-1" >
+          <h2 class="text-center mb-3">Need a home? Easy as 1, 2, 3.</h2>
+            <card-navigation />
           </div>
         </div>
       </div>
@@ -47,22 +35,20 @@
     font-size: 3em;
     font-weight: bold;
   }
-  @import '@core/scss/vue/libs/vue-wizard.scss';
-  @import '@core/scss/vue/libs/vue-select.scss';
 }
 </style>
 <script>
 import { VueAutosuggest } from 'vue-autosuggest'
 import vSelect from 'vue-select'
 import { BAvatar, BCardText, BButton, BRow, BCol } from 'bootstrap-vue'
-import FormWizardVertical from './HomeSteps.vue'
+import CardNavigation from './HomeSteps.vue'
 
 
 export default {
   components: {
     BRow,
     BCol,
-    FormWizardVertical,
+    CardNavigation,
     VueAutosuggest,
     vSelect,
     BAvatar,
