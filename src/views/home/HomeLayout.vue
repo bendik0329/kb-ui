@@ -1,43 +1,45 @@
 <template>
     <!-- start home-page -->
     <section id="home-page">
-        <b-nav  class="fixed-top wrap-border d-flex align-items-center px-2 bg-white">
+        <b-nav  class="fixed-top wrap-border d-flex align-items-center px-2 px-md-0  bg-white">
           <b-nav-item class="mr-auto font-weight-bolder">
             <router-link :to="{ name: 'home'}">
               <vuexy-logo />
             </router-link>
           </b-nav-item>
-          <b-nav-item active class="font-weight-bolder">
+          <b-nav-item active class="font-weight-bolder d-md-block d-sm-none">
             <router-link :to="{ name: 'home'}">
               Home
             </router-link>
           </b-nav-item>
-          <b-nav-item class="font-weight-bolder">
+          <b-nav-item class="font-weight-bolder d-md-block d-sm-none">
             <router-link :to="{ name: 'faq'}">
               FAQ
             </router-link>
           </b-nav-item>
-          <b-nav-item class="font-weight-bolder">
+          <b-nav-item class="font-weight-bolder d-md-block d-sm-none">
             <router-link :to="{ name: 'findAgent'}">
               Find Agent
             </router-link>
           </b-nav-item>
-          <b-nav-item class="font-weight-bolder">
+          <b-nav-item class="font-weight-bolder d-md-block d-sm-none">
             <router-link :to="{ name: 'joinUsPage'}">
               Join Us
             </router-link>
           </b-nav-item>
           
-
+          
           
           <b-button
               v-if="!isLogin"
               v-ripple.400="'rgba(113, 102, 240, 0.15)'"
               variant="outline-dark"
+              class="d-md-block d-sm-none "
               @click.prevent="routerPushTo('login')"
             >
               Sign in
             </b-button>
+
             <b-button-group
               v-else
               >
@@ -55,6 +57,54 @@
                 Log out
               </b-button>
             </b-button-group>
+
+          
+          <b-dropdown
+            id="dropdown-grouped"
+            v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+            variant="outline-dark"
+            right
+            class="dropdown-icon-wrapper d-none d-sm-block d-md-none"
+          >
+            <template #button-content>
+              <feather-icon
+                icon="MenuIcon"
+                size="16"
+                class="align-middle"
+              />
+            </template>
+            <b-dropdown-item>
+              <router-link :to="{ name: 'home'}">
+                Home
+              </router-link>
+            </b-dropdown-item>
+            <b-dropdown-item>
+              <router-link :to="{ name: 'faq'}">
+                FAQ
+              </router-link>
+            </b-dropdown-item>
+            <b-dropdown-item>
+              <router-link :to="{ name: 'findAgent'}">
+                Find Agent
+              </router-link>
+            </b-dropdown-item>
+            <b-dropdown-item>
+              <router-link :to="{ name: 'joinUsPage'}">
+                Join Us
+              </router-link>
+            </b-dropdown-item>
+            <b-dropdown-divider />
+            <b-dropdown-item>
+              <b-button
+                v-if="!isLogin"
+                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                variant="outline-dark"
+                @click.prevent="routerPushTo('login')"
+                >
+                Sign in
+              </b-button>
+            </b-dropdown-item>
+          </b-dropdown>
         </b-nav>
         <div class="main-content">
           <router-view></router-view>
@@ -87,7 +137,7 @@
 <script>
 /* eslint-disable global-require */
 import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser,isUserNew } from '@/auth/utils'
-import { BLink, BButtonGroup,BButton, BNav,BNavItem} from 'bootstrap-vue'
+import { BLink, BButtonGroup,BButton, BNav,BNavItem,BDropdown,BDropdownItem,} from 'bootstrap-vue'
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import Ripple from 'vue-ripple-directive'
 import store from '@/store/index'
@@ -107,6 +157,8 @@ export default {
     BNavItem,
     BButtonGroup,
     BButton,
+    BDropdown,
+    BDropdownItem,
     Ripple,
   },
   directives: {

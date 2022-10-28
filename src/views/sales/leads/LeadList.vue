@@ -82,7 +82,7 @@
         :sort-desc.sync="isSortDirDesc"
         class="position-relative"
         :small="true"
-        :hover="true"
+        
         selectable
         @row-selected="onRowSelected"
         >
@@ -490,7 +490,6 @@
             const leadURL = `${this.GLOBAL.server}/leads?populate=*&filters[franchiseID][$eq]=${Franchises.id}`
             this.$http.get(leadURL)
               .then(res => {
-                console.log('res',res)
                 const leads = res.data.data
                 const leadsData = []
                 leads.forEach(lead => {
@@ -499,12 +498,12 @@
                     ...lead.attributes
                   })
                 })
-                console.log(leadsData)
+                // console.log(leadsData)
                 this.data = leads
                 this.leadsData = leads
                 const pagination = res.data.meta.pagination
                 this.pageMeta = this.pagination(pagination.total,pagination.currentPage,pagination.pageSize)
-                console.log('pageMeta',this.pageMeta)
+                // console.log('pageMeta',this.pageMeta)
                 this.filterLead(leads)
               })
           }
@@ -573,11 +572,17 @@
           this.updateMethod = 'edit'
         }
       },
-      openStatusModal (item ) {
+      openStatusModal (item) {
+        console.log('open',item)
         this.tempStatus = {
-          status:item.status,
-          id: item._id,
+          id: item.id,
+          ...item.attributes,
+          franchise:{
+            id:item.attributes.franchise.data.id,
+            ...item.attributes.franchise.data.attributes
+          }
         }
+        console.log('open',this.tempStatus)
       },
       updateLead (item) {
         console.log(item)
@@ -648,13 +653,15 @@
         //this.$refs['modal-lead-update'].show()
       },
       updateStatus (item){
-        let url =`${this.GLOBAL.server}/sales/leads/status/${item.id}`
-        let httpsMethods = 'patch'
-        this.$http[httpsMethods](url,item)
+        console.log('Change Status',item)
+        
+        let url =`${this.GLOBAL.server}/leads/${item.id}`
+        let httpsMethods = 'put'
+        this.$http[httpsMethods](url,{data:item})
           .then(res => { 
             console.log(res.data)
-            this.makeToast(res.data.result,res.data.message,'Change Status')
-            this.getLead()
+            this.makeToast('success','success','Change Status')
+            this.getUserType()
           })
       },
       statusVariant(status) {

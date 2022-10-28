@@ -1,6 +1,6 @@
 <template>
+  <div>
     <b-modal
-      
       id="modal-lead-status"
       ref="status-modal"
       :header-bg-variant="headerBgVariant"
@@ -8,6 +8,7 @@
       title="Change Status"
       ok-title="Submit"
       cancel-variant="outline-secondary"
+      no-stacking
       @show="resetModal"
       @hidden="resetModal"
       @ok="handleOk"
@@ -41,7 +42,46 @@
 
       </b-form>
       </validation-observer>
+
+      <template #modal-footer>
+        <div class="w-100">
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            class="float-right"
+            v-b-modal.modal-multi-2
+          >
+            Submit
+          </b-button>
+        </div>
+      </template>
+
     </b-modal>
+    <b-modal
+      id="modal-multi-2"
+      ref="status-modal-2"
+      title="Are you sure ?"
+      ok-only
+      ok-title="Accept"
+      @OK="handleOk"
+    >
+      <b-card-text class="my-2">
+        Are you sure you sign all the Forms?
+      </b-card-text>
+      <template #modal-footer>
+        <div class="w-100">
+          <b-button
+            v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+            variant="primary"
+            class="float-right"
+            @click="statusSubmit()"
+          >
+          confirm
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -91,12 +131,12 @@ export default {
       headerBgVariant: 'light',
       headerTextVariant: 'dark',
       teamSelected: [],
-      tempStatusOption: ['new','contacted','working','qualified','unqualified',],
+      tempStatusOption: ['New','Contacted','Working','Qualified','Unqualified',],
       userSelected: [],
       tempUserOption: {},
       tempStatus: {
+        id:'',
         status:'',
-        id:''
       },
     }
   },
@@ -117,6 +157,7 @@ export default {
       this.nameState = null
     },
     handleOk(bvModalEvt) {
+      console.log('ok')
       // Prevent modal from closing
       bvModalEvt.preventDefault()
       // Trigger submit handler
@@ -129,7 +170,18 @@ export default {
       }
       // Push the name to submitted names
       console.log('submit')
-    }
+      this.$bus.$emit('status-change', this.tempStatus)
+          this.$nextTick(() => {
+            this.$refs['status-modal'].toggle('#toggle-btn')
+          })
+    },
+    statusSubmit() {
+      console.log('submit', this.tempStatus)
+      this.$bus.$emit('status-change', this.tempStatus)
+          this.$nextTick(() => {
+            this.$refs['status-modal-2'].hide()
+          })
+    },
   }
 }
 </script>

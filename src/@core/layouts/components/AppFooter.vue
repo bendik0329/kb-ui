@@ -9,12 +9,13 @@
       <span class="d-none d-sm-inline-block">, All rights Reserved</span>
     </span>
 
-    <span class="float-md-right d-none d-md-block">Hand-crafted &amp; Made with
+    <span class="float-md-right d-none d-md-block">
       <feather-icon
-        icon="HeartIcon"
-        size="21"
-        class="text-danger stroke-current"
+      icon="PowerIcon"
+      size="21"
+      class="text-danger stroke-current"
       />
+      by UltraKloud
     </span>
   </p>
 </template>

@@ -99,18 +99,10 @@ export default [
       name: 'sales-forms',
       component: () => import('@/views/sales/forms/FormsSubpage.vue'),
       meta: {
+        contentRenderer: 'sidebar-left',
+        contentClass: 'todo-application',
         resource: 'Agent',
         action: 'read',
-        pageTitle: 'Forms',
-          breadcrumb: [
-            {
-              text: 'Sales',
-            },
-            {
-              text: 'Forms',
-              active: true,
-            },
-          ],
       },
     },
   ]
