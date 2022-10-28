@@ -112,7 +112,7 @@ export default {
       { title: 'Timeline', route: { name: 'components-timeline' }, icon: 'GitCommitIcon', isBookmarked: false },
       { title: 'Toastification', route: { name: 'extensions-toastification' }, icon: 'BellIcon', isBookmarked: false },
       { title: 'Toasts', route: { name: 'components-toasts' }, icon: 'BellIcon', isBookmarked: false },
-      { title: 'Todo', route: { name: 'apps-todo' }, icon: 'CheckSquareIcon', isBookmarked: true },
+      { title: 'Todo', route: { name: 'sales-task' }, icon: 'CheckSquareIcon', isBookmarked: true },
       { title: 'Tooltip', route: { name: 'components-tooltip' }, icon: 'CopyIcon', isBookmarked: false },
       { title: 'Tour', route: { name: 'extensions-tour' }, icon: 'GlobeIcon', isBookmarked: false },
       // { title: 'Tree', route: { name: 'extensions-tree' }, icon: 'GitCommitIcon', isBookmarked: false },

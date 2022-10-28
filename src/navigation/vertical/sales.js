@@ -42,6 +42,12 @@ export default [
             action: 'read',
             resource: 'Agent',
           },
+          {
+            title: 'Task',
+            route: 'sales-task',
+            action: 'read',
+            resource: 'Agent',
+          },
         ],
       },
 ]

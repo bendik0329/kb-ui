@@ -7,40 +7,57 @@
               <vuexy-logo />
             </router-link>
           </b-nav-item>
-          <b-nav-item active class="font-weight-bolder d-md-block d-sm-none">
+          <b-nav-item active class="font-weight-bolder d-xl-block d-lg-block d-md-block d-sm-none d-none">
             <router-link :to="{ name: 'home'}">
               Home
             </router-link>
           </b-nav-item>
-          <b-nav-item class="font-weight-bolder d-md-block d-sm-none">
+          <b-nav-item class="font-weight-bolder d-xl-block d-lg-block d-md-block d-sm-none d-none">
             <router-link :to="{ name: 'faq'}">
               FAQ
             </router-link>
           </b-nav-item>
-          <b-nav-item class="font-weight-bolder d-md-block d-sm-none">
+          <b-nav-item class="font-weight-bolder d-xl-block d-lg-block d-md-block d-sm-none d-none">
             <router-link :to="{ name: 'findAgent'}">
               Find Agent
             </router-link>
           </b-nav-item>
-          <b-nav-item class="font-weight-bolder d-md-block d-sm-none">
+          <b-nav-item class="font-weight-bolder d-xl-block d-lg-block d-md-block d-sm-none d-none">
             <router-link :to="{ name: 'joinUsPage'}">
               Join Us
             </router-link>
           </b-nav-item>
           
-          
-          
+
+          <!-- Login with modal -->
           <b-button
-              v-if="!isLogin"
-              v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-              variant="outline-dark"
-              class="d-md-block d-sm-none "
-              @click.prevent="routerPushTo('login')"
-            >
-              Sign in
-            </b-button>
+            v-if="!isLogin"
+            v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+            variant="outline-dark"
+            class="d-xl-block d-lg-block d-md-block d-sm-none d-none"
+            v-b-modal.modal-login
+            @click.prevent=""
+          >
+            Sign in(modal)
+          </b-button>
+          <!-- Login with modal -->
+
+
+          <!-- Login with page -->
+          <b-button
+            v-if="!isLogin"
+            v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+            variant="outline-dark"
+            class="d-xl-block d-lg-block d-md-block d-sm-none d-none"
+            @click.prevent="routerPushTo('login')"
+          >
+            Sign in 
+          </b-button>
+          <!-- Login with page -->
+
 
             <b-button-group
+              class="d-xl-block d-lg-block d-md-block d-sm-none d-none"
               v-else
               >
               <b-button
@@ -52,7 +69,7 @@
               <b-button
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
                 variant="outline-dark"
-                :href="`${logout}`"
+                @click.prevent="userLogout"
                 >
                 Log out
               </b-button>
@@ -64,7 +81,7 @@
             v-ripple.400="'rgba(113, 102, 240, 0.15)'"
             variant="outline-dark"
             right
-            class="dropdown-icon-wrapper d-none d-sm-block d-md-none"
+            class="dropdown-icon-wrapper d-xl-none d-lg-none d-md-none d-sm-block"
           >
             <template #button-content>
               <feather-icon
@@ -94,9 +111,27 @@
               </router-link>
             </b-dropdown-item>
             <b-dropdown-divider />
-            <b-dropdown-item>
+
+            <!-- Login with modal -->
+            <b-dropdown-item
+              v-if="!isLogin"
+              >
               <b-button
-                v-if="!isLogin"
+                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                variant="outline-dark"
+                v-b-modal.modal-login
+                @click.prevent=""
+                >
+                Sign in (modal)
+              </b-button>
+            </b-dropdown-item>
+            <!-- Login with modal -->
+
+            <!-- Login with page -->
+            <b-dropdown-item
+              v-if="!isLogin"
+              >
+              <b-button
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
                 variant="outline-dark"
                 @click.prevent="routerPushTo('login')"
@@ -104,10 +139,33 @@
                 Sign in
               </b-button>
             </b-dropdown-item>
+            <!-- Login with page -->
+
+            <b-dropdown-item
+            v-if="isLogin">
+            <b-button
+                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                variant="outline-dark"
+                @click.prevent="routerPushTo('dashboard-ecommerce')"
+                >
+                Dashboard
+              </b-button>
+            </b-dropdown-item>
+            <b-dropdown-item
+            v-if="isLogin">
+            <b-button
+                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                variant="outline-dark"
+                @click.prevent="userLogout()"
+                >
+                Log out
+              </b-button>
+            </b-dropdown-item>
           </b-dropdown>
         </b-nav>
         <div class="main-content">
           <router-view></router-view>
+          <login-modal></login-modal>
         </div>
         <footer class="fixed-bottom px-5">
             <p class="clearfix mb-0">
@@ -136,18 +194,16 @@
 
 <script>
 /* eslint-disable global-require */
-import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser,isUserNew } from '@/auth/utils'
-import { BLink, BButtonGroup,BButton, BNav,BNavItem,BDropdown,BDropdownItem,} from 'bootstrap-vue'
+import { BLink, BButtonGroup,BButton,BModal, BNav,BNavItem,BDropdown,BDropdownItem,BDropdownDivider,} from 'bootstrap-vue'
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import Ripple from 'vue-ripple-directive'
-import store from '@/store/index'
+import LoginModal from './components/LoginModal.vue'
 
 export default {
   data() {
     return {
       isLogin: false,
       isNewUser: false,
-      logout:`${this.GLOBAL.server}/auth/signout`,
     }
   },
   components: {
@@ -159,7 +215,10 @@ export default {
     BButton,
     BDropdown,
     BDropdownItem,
+    BDropdownDivider,
     Ripple,
+    BModal,
+    LoginModal,
   },
   directives: {
     Ripple,
@@ -172,35 +231,26 @@ export default {
         this.$router.push({name:`${ where }`})
     },
     checkLogin() {
-      const user = JSON.parse(localStorage.getItem('userData'))
-      console.log(JSON.parse(localStorage.getItem('userData')))
-      // this.isLogin = user.isLogin
-      // this.$http.get(`${this.GLOBAL.server}/login/check`)
-      //   .then(res => {
-      //     console.log(res.data)
-      //     if(res.data.isLogin) {
-      //       this.isLogin = res.data.isLogin
-      //       localStorage.setItem('userData', JSON.stringify(res.data.user))
-      //       this.$ability.update(res.data.user.ability)
-      //     }else{
-      //       console.log("login yet")
-      //     }
-
-      //   })
+      if(localStorage.getItem('accessToken')){
+        this.isLogin = true
+      }
+     
     },
-    
+    userLogout(){
+      localStorage.removeItem('accessToken')
+      this.isLogin = false
+    },
   },
   created(){
     this.checkLogin()
-    console.log(this.GLOBAL)
-    // this.$http.get(`${this.GLOBAL.api}/testing`)
-    //     .then(res => {
-    //       console.log(res.data)
-    //     })
-        // fetch(`https://uaT.kloudrealty.com/api/login/check`)
-        // .then(res => {
-        //   console.log(res)
-        // })
+    
+  },
+  mounted(){
+    this.$bus.$on('login-success', () => this.checkLogin() )
+
+  },
+  beforeDestroy(){
+    this.$bus.$off('login-success' )
   }
 }
 </script>

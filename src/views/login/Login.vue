@@ -258,13 +258,13 @@ export default {
             localStorage.setItem('userData', JSON.stringify(data))
             this.$ability.update(data.ability)
             // setTimeout(this.pushToDashboard,5000)
-            this.$router.push({name:'dashboard-analytics'})
+            this.$router.push({name:'dashboard-ecommerce'})
           }
         })
     },
     pushToDashboard(){
       console.log('go!!')
-      this.$router.push({name:'dashboard-analytics'})
+      this.$router.push({name:'dashboard-ecommerce'})
     },
     checkLogin() {
       this.$http.get(`${this.GLOBAL.server}/login/check`)

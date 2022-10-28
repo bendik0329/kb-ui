@@ -59,11 +59,12 @@ axios.get(`${$theServer.server}/accesses`)
         settings.forEach(item => {
             item.meta.resource = routeAccess.settings[item.name]
         })
-    }
 
+        // console.log(routeAccess)
+    }
   }).catch(error => {
     // Handle error.
-    console.log('An error occurred:', error.response);
+    console.log('An error occurred:', error);
     });
 
     function filterResource(resource) {

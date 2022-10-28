@@ -105,5 +105,16 @@ export default [
         action: 'read',
       },
     },
+    {
+      path: '/sales/task',
+      name: 'sales-task',
+      component: () => import('@/views/sales/task/TaskSubpage.vue'),
+      meta: {
+        contentRenderer: 'sidebar-left',
+        contentClass: 'todo-application',
+        resource: 'Agent',
+        action: 'read',
+      },
+    },
   ]
   

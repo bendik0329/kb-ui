@@ -65,8 +65,7 @@ axios.get(`${$theServer.server}/accesses`)
                 routeAccess[page.route][page.page] = filterResource(page.Access)
             })
         })
-
-        dashboard[1].children.forEach(item => {
+        dashboard.forEach(item => {
             item.resource = routeAccess.dashboard[item.route]
         })
         sales[0].children.forEach(item => {
@@ -97,7 +96,7 @@ axios.get(`${$theServer.server}/accesses`)
 
   }).catch(error => {
     // Handle error.
-    console.log('An error occurred:', error.response);
+    console.log('An error occurred:', error);
     });
 
 

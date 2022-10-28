@@ -32,7 +32,7 @@
             </b-input-group-prepend>
             <b-form-input
               :value="searchQuery"
-              placeholder="Search forms"
+              placeholder="Search task"
               @input="updateRouteQuery"
             />
           </b-input-group>
@@ -150,7 +150,7 @@
     </div>
 
     <!-- Task Handler -->
-    <forms-task-handler-sidebar
+    <task-handler-sidebar
       v-model="isTaskHandlerSidebarActive"
       :task="task"
       :clear-task-data="clearTaskData"
@@ -161,7 +161,7 @@
 
     <!-- Sidebar -->
     <portal to="content-renderer-sidebar-left">
-      <forms-left-sidebar
+      <task-left-sidebar
         :task-categories="taskCategories"
         :task-tags="taskTags"
         :is-task-handler-sidebar-active.sync="isTaskHandlerSidebarActive"
@@ -186,9 +186,9 @@ import draggable from 'vuedraggable'
 import { formatDate, avatarText } from '@core/utils/filter'
 import { useRouter } from '@core/utils/utils'
 import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
-import FormsLeftSidebar from './FormsLeftSidebar.vue'
+import TaskLeftSidebar from './TaskLeftSidebar.vue'
 import todoStoreModule from './todoStoreModule'
-import FormsTaskHandlerSidebar from './FormsTaskHandlerSidebar.vue'
+import TaskHandlerSidebar from './TaskHandlerSidebar.vue'
 
 export default {
   data(){
@@ -210,8 +210,8 @@ export default {
     VuePerfectScrollbar,
 
     // App SFC
-    FormsLeftSidebar,
-    FormsTaskHandlerSidebar,
+    TaskLeftSidebar,
+    TaskHandlerSidebar,
   },
   setup() {
     const TODO_APP_STORE_MODULE_NAME = 'app-todo'
