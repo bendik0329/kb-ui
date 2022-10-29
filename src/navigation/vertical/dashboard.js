@@ -1,6 +1,6 @@
 export default [
   {
-    title: 'Dashboards',
+    title: 'Dashboard',
     icon: 'HomeIcon',
     tagVariant: 'light-warning',
     route: 'dashboard-ecommerce',

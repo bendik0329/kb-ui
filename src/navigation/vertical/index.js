@@ -109,7 +109,6 @@ function filterResource(resource) {
 
 // Array of sections
 export default [
-    ...front,
     ...dashboard,
     ...sales,
     ...propertyManagement,

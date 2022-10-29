@@ -1,6 +1,6 @@
 export default [
     {
-        title: 'Property Management',
+        title: 'Property Mgmt',
         icon: 'BriefcaseIcon',
         tagVariant: 'light-warning',
         action: 'read',
