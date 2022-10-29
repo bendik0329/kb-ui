@@ -111,12 +111,12 @@ function filterResource(resource) {
 export default [
     ...front,
     ...dashboard,
-    ...me,
     ...sales,
+    ...propertyManagement,
     ...approvals,
     ...marketing,
     ...education,
+    ...me,
     ...organization,
-    ...propertyManagement,
     ...settings, 
 ]
