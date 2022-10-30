@@ -21,10 +21,10 @@
         <span class="font-weight-bold">Profile</span>
       </template>
 
-       <my-profile 
-        v-if="meData.profile"
-        :general-data="meData.profile"
-        :profile="meData.profile"/>
+       <me-page-profile
+        v-if="options.profile"
+        :profile-data="options.profile"
+      />
     </b-tab>
     <!--/ change profile tab -->
 
@@ -40,7 +40,10 @@
         />
         <span class="font-weight-bold">Team</span>
       </template>
-
+        <me-page-teams
+        v-if="options.teams"
+        :teams-data="options.teams"
+      />
       
     </b-tab>
 
@@ -125,11 +128,24 @@
         />
         <span class="font-weight-bold">Tax</span>
       </template>
-
+      
       
     </b-tab>
     
+    <b-tab>
 
+      <!-- title -->
+      <template #title>
+        <feather-icon
+          icon="BellIcon"
+          size="18"
+          class="mr-50"
+        />
+        <span class="font-weight-bold">Payment Methods</span>
+      </template>
+
+      
+    </b-tab>  
 
 
   </b-tabs>
@@ -138,6 +154,13 @@
 <script>
 import { BTabs, BTab } from 'bootstrap-vue'
 import MyProfile from './my-profile/MyProfilePage.vue'
+import MyExpenses from './my-expenses/MyExpensesPage.vue'
+import MyMembership from './my-membership/MyMembershipSubpage.vue'
+import MyReports from './my-reports/MyReportsSubpage.vue'
+import MyTaxes from './my-tax/MyTaxSubpage.vue'
+import MyPaymentMethods from './my-paymentmethods/MyPaymentMethods.vue'
+import MyLicense from './my-license/MyLicenseSubpage.vue'
+import MyTeams from './my-teams/MyTeamsSubpage.vue'
 
 
 export default {
@@ -145,20 +168,21 @@ export default {
     BTabs,
     BTab,
     MyProfile,
+    MyLicense,
+    MyMembership,
+    MyExpenses,
+    MyReports,
+    MyTaxes,
+    MyPaymentMethods,
+    MyTeams,
   },
   data() {
     return {
       options: {},
-      meData:{}
     }
   },
-  created() {
-    const uid = JSON.parse(localStorage.getItem('userData')).id
-    this.$http.get(`${this.GLOBAL.server}/me-page/profile/${uid}`)
-      .then(res => {
-        console.log(res.data)
-        this.meData = res.data
-      })
-  }
+  // beforeCreate() {
+  //   this.$http.get('/me-page/data').then(res => { this.options = res.data })
+  // },
 }
 </script>

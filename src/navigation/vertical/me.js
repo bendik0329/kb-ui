@@ -5,6 +5,6 @@ export default [
         tagVariant: 'light-warning',
         action: 'read',
         resource: 'Agent',
-        route: 'me-page-profile',
+        route: 'me-page-me-page',
       },
 ]

@@ -1,7 +1,7 @@
 export default [
     {
-      path: '/me-page/profile',
-      name: 'me-page-profile',
+      path: '/me-page',
+      name: 'me-page-me-page',
       component: () => import('@/views/me-page/me-page.vue'),
       meta: {
           resource: 'Agent',
@@ -18,6 +18,15 @@ export default [
           ],
         },
     },
+    {
+      path: '/me-page/profle',
+      name: 'me-page-profile',
+      component: () => import('@/views/me-page/my-profile/MyProfilePage.vue'),
+      meta: {
+        resource: 'Agent',
+        action: 'read',
+      },
+  },
     {
         path: '/me-page/teams',
         name: 'me-page-teams',

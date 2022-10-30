@@ -1,5 +1,5 @@
 <template>
-  <section id="dashboard-analytics">
+  <section id="dashboard-franchise">
     <b-row class="match-height">
       <b-col
         lg="6"

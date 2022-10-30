@@ -6,17 +6,10 @@
       <b-media-aside>
         <b-link>
           <b-img
-            v-if="optionsLocal.avatar"
             ref="previewEl"
             rounded
             :src="optionsLocal.avatar"
             height="80"
-          />
-          <b-avatar
-            v-else
-            size="70px"
-            square
-            class="mr-1"
           />
         </b-link>
         <!--/ avatar -->
@@ -61,7 +54,7 @@
     <!-- form -->
     <b-form class="mt-2">
       <b-row>
-        <b-col sm="12">
+        <b-col sm="6">
           <b-form-group
             label="Username"
             label-for="account-username"
@@ -73,9 +66,9 @@
             />
           </b-form-group>
         </b-col>
-        <b-col sm="12">
+        <b-col sm="6">
           <b-form-group
-            label="Full Name"
+            label="Name"
             label-for="account-name"
           >
             <b-form-input
@@ -85,7 +78,7 @@
             />
           </b-form-group>
         </b-col>
-        <b-col sm="12">
+        <b-col sm="6">
           <b-form-group
             label="E-mail"
             label-for="account-e-mail"
@@ -98,7 +91,7 @@
 
           </b-form-group>
         </b-col>
-        <b-col sm="12">
+        <b-col sm="6">
           <b-form-group
             label="Company"
             label-for="account-company"
@@ -107,19 +100,6 @@
               v-model="optionsLocal.company"
               name="company"
               placeholder="Company name"
-            />
-          </b-form-group>
-        </b-col>
-
-        <b-col sm="12">
-          <b-form-group
-            label="Phone"
-            label-for="account-phone"
-          >
-            <b-form-input
-              v-model="optionsLocal.phone"
-              name="phone"
-              placeholder="Phone name"
             />
           </b-form-group>
         </b-col>
@@ -151,7 +131,6 @@
             v-ripple.400="'rgba(255, 255, 255, 0.15)'"
             variant="primary"
             class="mt-2 mr-1"
-            @click.prevent="editProfile()"
           >
             Save changes
           </b-button>
@@ -172,7 +151,7 @@
 
 <script>
 import {
-  BAvatar,BFormFile, BButton, BForm, BFormGroup, BFormInput, BRow, BCol, BAlert, BCard, BCardText, BMedia, BMediaAside, BMediaBody, BLink, BImg,
+  BFormFile, BButton, BForm, BFormGroup, BFormInput, BRow, BCol, BAlert, BCard, BCardText, BMedia, BMediaAside, BMediaBody, BLink, BImg,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import { useInputImageRenderer } from '@core/comp-functions/forms/form-utils'
@@ -183,7 +162,6 @@ export default {
     BButton,
     BForm,
     BImg,
-    BAvatar,
     BFormFile,
     BFormGroup,
     BFormInput,
@@ -201,39 +179,18 @@ export default {
     Ripple,
   },
   props: {
-    generalData: {
+    profileData: {
       type: Object,
       default: () => {},
     },
-    profile: {
-      type: Object,
-      // default: () => {},
-      default () { return {} },
-    },
-  },
-  watch: {
-    profile () {
-      this.tempProfile = this.profile
-      console.log(this.tempProfile)
-    }
   },
   data() {
     return {
-      optionsLocal: JSON.parse(JSON.stringify(this.generalData)),
+      optionsLocal: JSON.parse(JSON.stringify(this.profileData)),
       profileFile: null,
-      tempProfile: {},
     }
   },
   methods: {
-    editProfile() {
-        console.log(this.tempProfile ,this.profile)
-        const uid = JSON.parse(localStorage.getItem('userData')).id
-        const url =`http://${this.GLOBAL.server}:3000/me-page/profile/${uid}`
-        this.$http.patch(url,this.optionsLocal)
-        .then(res => {
-            console.log(res.data)
-        })
-    },
     resetForm() {
       this.optionsLocal = JSON.parse(JSON.stringify(this.generalData))
     },
@@ -250,8 +207,5 @@ export default {
       inputImageRenderer,
     }
   },
-  mounted () {
-    console.log(this.optionsLocal)
-  }
 }
 </script>

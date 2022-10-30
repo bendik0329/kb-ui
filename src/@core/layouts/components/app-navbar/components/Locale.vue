@@ -54,19 +54,9 @@ export default {
         name: 'English',
       },
       {
-        locale: 'fr',
-        img: require('@/assets/images/flags/fr.png'),
-        name: 'French',
-      },
-      {
-        locale: 'de',
-        img: require('@/assets/images/flags/de.png'),
-        name: 'German',
-      },
-      {
-        locale: 'pt',
+        locale: 'es',
         img: require('@/assets/images/flags/pt.png'),
-        name: 'Portuguese',
+        name: 'Spanish',
       },
     ]
     /* eslint-disable global-require */
