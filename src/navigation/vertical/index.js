@@ -30,6 +30,7 @@ tag
 tagVariant
 
 */
+//nav
 import front from './front'
 import dashboard from './dashboard'
 import sales from './sales'
@@ -58,7 +59,7 @@ axios.get(`${$theServer.server}/accesses`)
 
         const routeAccess = {}
         const resData = res.data.data
-        // console.log(resData)
+        //console.log(resData)
         resData.forEach( item => {
             routeAccess[item.attributes.label] = {}
             item.attributes.children.forEach(page => {
@@ -86,7 +87,7 @@ axios.get(`${$theServer.server}/accesses`)
         propertyManagement[0].children.forEach(item => {
             item.resource = routeAccess.propertyManagement[item.route]
         })
-        me[0].children.forEach(item => {
+        me.forEach(item => {
             item.resource = routeAccess.me[item.route]
         })
         settings[0].children.forEach(item => {

@@ -83,6 +83,66 @@
           tag="ul"
           class="todo-task-list media-list"
         >
+          <!-- forms -->
+          <li
+            v-for="form in forms"
+            :key="form.id"
+            class="todo-item"
+            :class="{ 'completed': task.isCompleted }"
+            @click="handleTaskClick(task)"
+          >
+            <feather-icon
+              icon="MoreVerticalIcon"
+              class="draggable-task-handle d-inline"
+            />
+            <div class="todo-title-wrapper">
+              <div class="todo-title-area">
+                <div class="title-wrapper">
+                  <b-form-checkbox
+                    :checked="task.isCompleted"
+                    @click.native.stop
+                    @change="updateTaskIsCompleted(task)"
+                  />
+                  <span class="todo-title">{{ form.title }}</span>
+                </div>
+              </div>
+              <div class="todo-item-action">
+                <div class="badge-wrapper mr-1">
+                  <b-badge
+                    v-model="form.tags"
+                    pill
+                    :variant="`light-${resolveTagVariant(form.tags)}`"
+                    class="text-capitalize"
+                  >
+                    {{ form.tags }}
+                  </b-badge>
+                </div>
+              </div>
+              <div class="todo-item-action">
+                
+                <small class="text-nowrap text-muted mr-1">{{ formatDate(form.updatedAt, { month: 'short', day: 'numeric'}) }}</small>
+                <b-avatar
+                  v-if="task.assignee"
+                  size="32"
+                  :src="task.assignee.avatar"
+                  :variant="`light-${resolveAvatarVariant(task.tags)}`"
+                  :text="avatarText(task.assignee.fullName)"
+                />
+                <b-avatar
+                  v-else
+                  size="32"
+                  variant="light-secondary"
+                >
+                  <feather-icon
+                    icon="UserIcon"
+                    size="16"
+                  />
+                </b-avatar>
+              </div>
+            </div>
+
+          </li>
+
           <li
             v-for="task in tasks"
             :key="task.id"
@@ -193,7 +253,8 @@ import FormsTaskHandlerSidebar from './FormsTaskHandlerSidebar.vue'
 export default {
   data(){
     return{
-      categories:['Selling','Buying','Miscellaneous']
+      categories:['Selling','Buying','Miscellaneous'],
+      forms:[],
     }
   },
 
@@ -318,6 +379,9 @@ export default {
       if (tag === 'medium') return 'warning'
       if (tag === 'high') return 'danger'
       if (tag === 'update') return 'info'
+      if (tag === 'Mandatory') return 'primary'
+      if (tag === 'Optional') return 'success'
+      if (tag === 'Informational') return 'warning'
       return 'primary'
     }
 
@@ -345,6 +409,19 @@ export default {
 
       router.replace({ name: route.name, query: currentRouteQuery })
     }
+    //get forms
+    const fetchForms = () => {
+      store.get(`${this.GLOBAL.server}/forms`, {
+        q: searchQuery.value,
+        filter: router.currentRoute.params.filter,
+        tag: router.currentRoute.params.tag,
+        sortBy: sortBy.value,
+      })
+        .then(response => {
+          console.log(response)
+        })
+    }
+    //fetchForms()
 
     const fetchTasks = () => {
       store.dispatch('app-todo/fetchTasks', {
@@ -408,6 +485,22 @@ export default {
       // Left Sidebar Responsive
       mqShallShowLeftSidebar,
     }
+  },
+  created(){
+    this.getForms()
+  },
+  methods:{
+    getForms() {
+      this.$http.get(`${this.GLOBAL.server}/users/me?populate[0]=forms`)
+        .then(res => {
+          console.log(res.data.forms)
+          this.forms = res.data.forms
+          ///this.filterLead(this.leadsData)
+        }).catch(err => {
+          console.log(err)
+          //this.makeToast('fail','danger','Get leads')
+        })
+    },
   },
 }
 </script>

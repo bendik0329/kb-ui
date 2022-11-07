@@ -77,7 +77,7 @@ export default function useTaskHandler(props, emit) {
     { label: 'High', value: 'high' },
     { label: 'Update', value: 'update' },
   ]
-  const CategoriesOptions = [
+  const categoriesOptions = [
     { label: 'Selling', value: 'Selling' },
     { label: 'Buying', value: 'Buying' },
     { label: 'Miscellaneous', value: 'Miscellaneous' },
@@ -91,7 +91,7 @@ export default function useTaskHandler(props, emit) {
     assigneeOptions,
     resolveAvatarVariant,
     tagOptions,
-    CategoriesOptions,
+    categoriesOptions,
     onSubmit,
   }
 }

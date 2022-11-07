@@ -146,6 +146,21 @@
               </b-form-group>
             </validation-provider>
 
+            <!--Category -->
+            <b-form-group
+              label="Category"
+              label-for="category"
+            >
+              <v-select
+                v-model="taskLocal.category"
+                :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
+                :close-on-select="false"
+                :options="categoriesOptions"
+                :reduce="option => option.value"
+                input-id="categories"
+              />
+            </b-form-group>
+
             <!--Tag -->
             <b-form-group
               label="Tag"
@@ -283,6 +298,7 @@ export default {
       assigneeOptions,
       onSubmit,
       tagOptions,
+      categoriesOptions,
       resolveAvatarVariant,
     } = useTaskHandler(toRefs(props), emit)
 
@@ -306,7 +322,7 @@ export default {
       onSubmit,
       assigneeOptions,
       tagOptions,
-
+      categoriesOptions,
       // Form Validation
       resetForm,
       clearForm,
