@@ -36,36 +36,24 @@
             variant="outline-dark"
             class="d-xl-block d-lg-block d-md-block d-sm-none d-none"
             v-b-modal.modal-login
-            @click.prevent=""
           >
-            Sign in(modal)
+            Sign in
           </b-button>
           <!-- Login with modal -->
 
 
-          <!-- Login with page -->
-          <b-button
-            v-if="!isLogin"
-            v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-            variant="outline-dark"
-            class="d-xl-block d-lg-block d-md-block d-sm-none d-none"
-            @click.prevent="routerPushTo('login')"
-          >
-            Sign in 
-          </b-button>
-          <!-- Login with page -->
 
 
             <b-button-group
               class="d-xl-block d-lg-block d-md-block d-sm-none d-none"
               v-else
               >
-              <b-button
+              <!-- <b-button
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                @click.prevent="routerPushTo('dashboard-ecommerce')"
+                @click.prevent="routerPushToDashboard()"
                 >
                 Dashboard
-              </b-button>
+              </b-button> -->
               <b-button
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
                 variant="outline-dark"
@@ -143,13 +131,13 @@
 
             <b-dropdown-item
             v-if="isLogin">
-            <b-button
+            <!-- <b-button
                 v-ripple.400="'rgba(113, 102, 240, 0.15)'"
                 variant="outline-dark"
-                @click.prevent="routerPushTo('dashboard-ecommerce')"
+                @click.prevent="outerPushToDashboard()"
                 >
                 Dashboard
-              </b-button>
+              </b-button> -->
             </b-dropdown-item>
             <b-dropdown-item
             v-if="isLogin">
@@ -204,6 +192,7 @@ export default {
     return {
       isLogin: false,
       isNewUser: false,
+      userType:'',
     }
   },
   components: {
@@ -230,9 +219,20 @@ export default {
     routerPushTo(where){
         this.$router.push({name:`${ where }`})
     },
+    routerPushToDashboard(){
+      let dashboard = ''
+      if(this.userType =='owner') dashboard = 'owner'
+      if(this.userType =='franchise') dashboard = 'franchise'
+      if(this.userType =='Agent') dashboard = 'agent'
+      console.log(`dashboard-${ dashboard }`)
+      this.$router.push({name:`dashboard-${ dashboard }`})
+    },
     checkLogin() {
+      console.log(JSON.parse(localStorage.getItem('userData')))
       if(localStorage.getItem('accessToken')){
         this.isLogin = true
+        this.userType = JSON.parse(localStorage.getItem('userData')).role
+        console.log(this.userType)
       }
      
     },
@@ -257,7 +257,7 @@ export default {
 
 <style lang="scss">
 #home-page{
-    position: absolute;
+    // position: absolute;
     z-index: 5;
     background-color: #fff;
     height: 100vh;

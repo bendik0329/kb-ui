@@ -32,9 +32,11 @@ axios.get(`${$theServer.server}/accesses`)
                 routeAccess[page.route][page.page] = filterResource(page.Access)
             })
         })
+        //console.log(dashboard)
         dashboard.forEach(item => {
             item.meta.resource = routeAccess.dashboard[item.name]
         })
+        //console.log(routeAccess.dashboard)
         sales.forEach(item => {
             item.meta.resource = routeAccess.sales[item.name]
         })

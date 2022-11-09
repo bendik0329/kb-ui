@@ -1,11 +1,14 @@
 import axios from '@axios'
 
+import { $theServer } from '@themeConfig'
+
 export default {
   namespaced: true,
   state: {},
   getters: {},
   mutations: {},
   actions: {
+    //old
     fetchTasks(ctx, payload) {
       return new Promise((resolve, reject) => {
         axios
@@ -38,5 +41,55 @@ export default {
           .catch(error => reject(error))
       })
     },
+    //new
+    fetchForms(ctx, payload) {
+      return new Promise((resolve, reject) => {
+        let url = `${$theServer.server}/users/me?populate[forms][populate]=*`
+        axios
+          .get(url, { params: payload })
+          .then(response => {
+            //console.log(response.data)
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    addForms(ctx, form) {
+      return new Promise((resolve, reject) => {
+        let url = `${$theServer.server}/forms`
+        axios
+          .post(url, { data: form })
+          .then(response => {
+            console.log(response)
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+    updateForm(ctx, { form }) {
+      return new Promise((resolve, reject) => {
+        let url = `${$theServer.server}/forms/${form.id}`
+        console.log(url)
+        axios
+          .put(url, { data:form })
+          .then(response => {
+            console.log(response)
+            resolve(response)
+          })
+          .catch(error => {
+            console.log(error)
+            reject(error)
+          })
+      })
+    },
+    removeForm(ctx, { id }) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${$theServer.server}/forms/${id}`)
+          .then(response => resolve(response))
+          .catch(error => reject(error))
+      })
+    },
+
   },
 }

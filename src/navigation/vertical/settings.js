@@ -4,19 +4,19 @@ export default [
         icon: 'SettingsIcon',
         tagVariant: 'light-warning',
         action: 'read',
-        resource: 'Agent',
+        resource: 'Owner',
         children: [
           {
             title: 'Integrations (O)',
             route: 'settings-integrations',
             action: 'read',
-            resource: 'owner',
+            resource: 'Owner',
           },
           {
             title: 'FeatureAccess (O)',
             route: 'settings-feature-access',
             action: 'read',
-            resource: 'owner',
+            resource: 'Owner',
           },
           {
             title: 'PaymentMethods',

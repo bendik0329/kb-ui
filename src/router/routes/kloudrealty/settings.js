@@ -4,7 +4,7 @@ export default [
       name: 'settings-integrations',
       component: () => import('@/views/settings/integrations(O)/IntegrationsSubpage.vue'),
       meta:{
-        resource: 'owner',
+        resource: 'Owner',
         action: 'read',
       }
     },
@@ -13,7 +13,7 @@ export default [
         name: 'settings-feature-access',
         component: () => import('@/views/settings/feature-access(O)/FeatureAccessSubpage.vue'),
         meta:{
-          resource: 'owner',
+          resource: 'Owner',
           action: 'read',
           pageTitle: 'Feature Access',
           breadcrumb: [

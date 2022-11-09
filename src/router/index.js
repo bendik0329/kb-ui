@@ -44,7 +44,7 @@ const router = new VueRouter({
         resource: 'ACL',
         action: 'read',
       }, 
-      redirect: { name: 'home' } 
+      redirect: { name: 'home' }
     },
     {
       path: '/home',
@@ -127,6 +127,16 @@ const router = new VueRouter({
         action: 'read',
       },
     },
+    {
+      path: '/error-404',
+      name: 'error-404',
+      component: () => import('@/views/error/Error404.vue'),
+      meta: {
+        layout: 'full',
+        resource: 'ACL',
+        action: 'read',
+      },
+    },
     ...kloudrealtyRoute,
     {
       path: '*',
@@ -143,12 +153,12 @@ router.beforeEach((to, _, next) => {
   console.log('can?', canNavigate(to))
   if (!canNavigate(to)) {
     console.log('no access')
-    // return next({ name: 'home' })
+    return next({ name: 'error-404' })
+    //return next({ name: 'home' })
     // Redirect to login if not logged in
     // if (!isLoggedIn) return next({ name: 'home' })
 
     // If logged in => not authorized
-    return next({ name: 'misc-error' })
   }
   // Redirect if logged in
   if (to.meta.redirectIfLoggedIn && isLoggedIn) {

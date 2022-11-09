@@ -78,18 +78,18 @@
         class="todo-task-list-wrapper list-group scroll-area"
       >
         <draggable
-          v-model="tasks"
+          v-model="Forms"
           handle=".draggable-task-handle"
           tag="ul"
           class="todo-task-list media-list"
         >
           <!-- forms -->
           <li
-            v-for="form in forms"
+            v-for="form in Forms"
             :key="form.id"
             class="todo-item"
-            :class="{ 'completed': task.isCompleted }"
-            @click="handleTaskClick(task)"
+            :class="{ 'completed': form.isCompleted }"
+            @click="handleTaskClick(form)"
           >
             <feather-icon
               icon="MoreVerticalIcon"
@@ -99,9 +99,9 @@
               <div class="todo-title-area">
                 <div class="title-wrapper">
                   <b-form-checkbox
-                    :checked="task.isCompleted"
+                    :checked="form.isCompleted"
                     @click.native.stop
-                    @change="updateTaskIsCompleted(task)"
+                    @change="updateTaskIsCompleted(form)"
                   />
                   <span class="todo-title">{{ form.title }}</span>
                 </div>
@@ -122,28 +122,32 @@
                 
                 <small class="text-nowrap text-muted mr-1">{{ formatDate(form.updatedAt, { month: 'short', day: 'numeric'}) }}</small>
                 <b-avatar
-                  v-if="task.assignee"
+                  v-if="form['users_permissions_user'].avatar"
                   size="32"
-                  :src="task.assignee.avatar"
-                  :variant="`light-${resolveAvatarVariant(task.tags)}`"
-                  :text="avatarText(task.assignee.fullName)"
+                  :src="form['users_permissions_user'].avatar"
+                  :variant="`light-${resolveAvatarVariant(form.tags)}`"
+                  :text="avatarText(form['users_permissions_user'].username)"
                 />
                 <b-avatar
                   v-else
                   size="32"
-                  variant="light-secondary"
+                  :variant="`light-${resolveAvatarVariant(form.tags)}`"
+                  :text="avatarText(form['users_permissions_user'].username)"
+                  v-b-tooltip.hover.v-primary
+                  :title="form['users_permissions_user'].username"
                 >
-                  <feather-icon
+                  <span>{{avatarText(form['users_permissions_user'].username)}}</span>
+                  <!-- <feather-icon
                     icon="UserIcon"
                     size="16"
-                  />
+                  /> -->
                 </b-avatar>
               </div>
             </div>
 
           </li>
-
-          <li
+          <!-- old -->
+          <!-- <li
             v-for="task in tasks"
             :key="task.id"
             class="todo-item"
@@ -198,11 +202,13 @@
               </div>
             </div>
 
-          </li>
+          </li> -->
+          <!-- old -->
+
         </draggable>
         <div
           class="no-results"
-          :class="{'show': !tasks.length}"
+          :class="{'show': !Forms.length}"
         >
           <h5>No Items Found</h5>
         </div>
@@ -215,8 +221,8 @@
       :task="task"
       :clear-task-data="clearTaskData"
       @remove-task="removeTask"
-      @add-task="addTask"
-      @update-task="updateTask"
+      @add-task="addForm"
+      @update-task="updateForm"
     />
 
     <!-- Sidebar -->
@@ -239,8 +245,9 @@ import {
 } from '@vue/composition-api'
 import {
   BFormInput, BInputGroup, BInputGroupPrepend, BDropdown, BDropdownItem,
-  BFormCheckbox, BBadge, BAvatar,
+  BFormCheckbox, BBadge, BAvatar,VBTooltip,
 } from 'bootstrap-vue'
+import Ripple from 'vue-ripple-directive'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import draggable from 'vuedraggable'
 import { formatDate, avatarText } from '@core/utils/filter'
@@ -257,7 +264,10 @@ export default {
       forms:[],
     }
   },
-
+  directives: {
+    'b-tooltip': VBTooltip,
+    Ripple,
+  },
   components: {
     BFormInput,
     BInputGroup,
@@ -293,8 +303,11 @@ export default {
       // eslint-disable-next-line no-use-before-define
       fetchTasks()
     })
+    const user = ref({})
 
     const tasks = ref([])
+
+    const Forms = ref([])
 
     const sortOptions = [
       'latest',
@@ -319,13 +332,15 @@ export default {
     const blankTask = {
       id: null,
       title: '',
-      dueDate: new Date(),
+      updatedAt: new Date(),
       description: '',
       assignee: null,
-      tags: [],
+      tags: null,
+      category:null,
       isCompleted: false,
       isDeleted: false,
       isImportant: false,
+      ['users_permissions_user']: null,
     }
     const task = ref(JSON.parse(JSON.stringify(blankTask)))
     const clearTaskData = () => {
@@ -353,6 +368,37 @@ export default {
           fetchTasks()
         })
     }
+
+    //new
+    const addForm = val => {
+      const newForm = {
+        ...val,
+        ['users_permissions_user']:user.value
+      }
+      console.log(newForm)
+      store.dispatch('app-todo/addForm', val)
+        .then(() => {
+          // eslint-disable-next-line no-use-before-define
+          fetchForms()
+        })
+    }
+    const removeForm = () => {
+      store.dispatch('app-todo/removeForm', { id: task.value.id })
+        .then(() => {
+          // eslint-disable-next-line no-use-before-define
+          fetchForms()
+        })
+    }
+    const updateForm = formData => {
+      console.log(formData) //updateForm
+      store.dispatch('app-todo/updateForm', { form: formData })
+        .then(() => {
+          // eslint-disable-next-line no-use-before-define
+          fetchForms()
+        })
+    }
+
+
 
     const perfectScrollbarSettings = {
       maxScrollbarLength: 150,
@@ -411,17 +457,21 @@ export default {
     }
     //get forms
     const fetchForms = () => {
-      store.get(`${this.GLOBAL.server}/forms`, {
+      store.dispatch('app-todo/fetchForms', {
         q: searchQuery.value,
         filter: router.currentRoute.params.filter,
         tag: router.currentRoute.params.tag,
         sortBy: sortBy.value,
       })
         .then(response => {
-          console.log(response)
+          console.log('get forms',response.data)
+          Forms.value = response.data.forms
+          const userData = {...response.data}
+          delete userData.forms
+          user.value = userData
         })
     }
-    //fetchForms()
+    fetchForms()
 
     const fetchTasks = () => {
       store.dispatch('app-todo/fetchTasks', {
@@ -438,6 +488,7 @@ export default {
     fetchTasks()
 
     const handleTaskClick = taskData => {
+      console.log(taskData)
       task.value = taskData
       isTaskHandlerSidebarActive.value = true
     }
@@ -458,6 +509,16 @@ export default {
       addTask,
       updateTask,
       clearTaskData,
+
+      //new
+      user,
+      Forms,
+      addForm,
+      removeForm,
+      updateForm,
+      fetchForms,
+
+
       taskTags,
       //categories
       taskCategories,
@@ -486,22 +547,7 @@ export default {
       mqShallShowLeftSidebar,
     }
   },
-  created(){
-    this.getForms()
-  },
-  methods:{
-    getForms() {
-      this.$http.get(`${this.GLOBAL.server}/users/me?populate[0]=forms`)
-        .then(res => {
-          console.log(res.data.forms)
-          this.forms = res.data.forms
-          ///this.filterLead(this.leadsData)
-        }).catch(err => {
-          console.log(err)
-          //this.makeToast('fail','danger','Get leads')
-        })
-    },
-  },
+  
 }
 </script>
 

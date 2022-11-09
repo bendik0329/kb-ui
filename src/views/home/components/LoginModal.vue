@@ -96,9 +96,7 @@
           password:this.password
         })
           .then( res => {
-            console.log(res)
             if(res.data.user) {
-              console.log(res.data.jwt)
               localStorage.setItem('accessToken', res.data.jwt)
               const data = {
                 id: res.data.user.id,
@@ -114,21 +112,25 @@
                 },
                 isLogin:true
               }
-              console.log(data.ability)
               localStorage.setItem('userData', JSON.stringify(data))
               this.$ability.update(data.ability)
               this.$bus.$emit('login-success')
-              this.hideModal()
+              //this.hideModal()
+              this.routerPushToDashboard(res.data.user.userType)
             }
           })
       },
-      pushToDashboard(){
-        console.log('go!!')
-        this.$router.push({name:'dashboard-ecommerce'})
-      },
       hideModal() {
-      this.$refs['login-modal'].hide()
-    },
+        this.$refs['login-modal'].hide()
+      },
+      routerPushToDashboard(type){
+        let dashboard = ''
+        if(type =='owner') dashboard = 'owner'
+        if(type =='franchise') dashboard = 'franchise'
+        if(type =='Agent') dashboard = 'agent'
+        // console.log(`dashboard-${ dashboard }`)
+        this.$router.push({name:`dashboard-${ dashboard }`})
+      },
     },
     
   }

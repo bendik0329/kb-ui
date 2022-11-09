@@ -64,7 +64,6 @@
             @submit.prevent="handleSubmit(onSubmit)"
             @reset.prevent="resetForm"
           >
-
             <!-- Title -->
             <validation-provider
               #default="validationContext"
@@ -91,7 +90,7 @@
             </validation-provider>
 
             <!-- Assignee -->
-            <b-form-group
+            <!-- <b-form-group
               label="Assignee"
               label-for="assignee"
             >
@@ -123,22 +122,24 @@
                   <span class="ml-50 d-inline-block align-middle"> {{ fullName }}</span>
                 </template>
               </v-select>
-            </b-form-group>
+            </b-form-group> -->
+            <!-- Assignee -->
 
             <!-- due Date -->
             <validation-provider
               #default="validationContext"
-              name="Due Date"
+              name="updatedAt"
               rules="required"
             >
 
               <b-form-group
-                label="Due Date"
-                label-for="due-date"
+                label="Last Update"
+                label-for="updatedAt"
               >
                 <flat-pickr
-                  v-model="taskLocal.dueDate"
+                  v-model="taskLocal.updatedAt"
                   class="form-control"
+                  disabled
                 />
                 <b-form-invalid-feedback :state="getValidationState(validationContext)">
                   {{ validationContext.errors[0] }}
@@ -274,14 +275,16 @@ export default {
       required: true,
     },
     task: {
-      type: Object,
+      type: [Object,Array],
       required: true,
     },
     clearTaskData: {
       type: Function,
       required: true,
     },
+    
   },
+  
   data() {
     return {
       required,

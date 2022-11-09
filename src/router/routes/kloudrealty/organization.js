@@ -26,7 +26,7 @@ export default [
       name: 'organization-plans-management',
       component: () => import('@/views/organization/plans-management/PlansManagementSubpage.vue'),
       meta: {
-        resource: 'franchise',
+        resource: 'Franchise',
         action: 'read',
       },
     },
@@ -63,7 +63,7 @@ export default [
       name: 'organization-tax-management',
       component: () => import('@/views/organization/tax-management/TaxManagementSubpage.vue'),
       meta: {
-        resource: 'franchise',
+        resource: 'Franchise',
         action: 'read',
       },
     },
@@ -72,7 +72,7 @@ export default [
       name: 'organization-membership-management',
       component: () => import('@/views/organization/membership-management/MembershipManagementSubpage.vue'),
       meta: {
-        resource: 'franchise',
+        resource: 'Franchise',
         action: 'read',
       },
     },
@@ -81,7 +81,7 @@ export default [
       name: 'organization-license-management',
       component: () => import('@/views/organization/license-management/LicenseManagementSubpage.vue'),
       meta: {
-        resource: 'franchise',
+        resource: 'Franchise',
         action: 'read',
       },
     },
