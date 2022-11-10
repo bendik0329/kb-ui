@@ -1,6 +1,9 @@
 const path = require('path')
 
 module.exports = {
+  devServer: {
+    host: 'localhost',
+  },
   publicPath: '/',
   lintOnSave: false,
   css: {

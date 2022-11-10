@@ -17,7 +17,7 @@
             :settings="perfectScrollbarSettings"
             class="sidebar-menu-list scroll-area"
           >
-            <!-- Filters -->
+           
             <b-list-group class="list-group-filters">
               <b-list-group-item
                 v-for="filter in taskFilters"
@@ -33,7 +33,7 @@
                 />
                 <span class="align-text-bottom line-height-1">{{ filter.title }}</span>
               </b-list-group-item>
-            </b-list-group>
+            </b-list-group> -->
 
             <!-- Categories -->
             <div class="mt-3 px-2 d-flex justify-content-between">
@@ -42,8 +42,8 @@
               </h6>
               <feather-icon icon="PlusIcon" />
             </div>
-
-            <b-list-group class="list-group-labels">
+            <!-- old -->
+            <!-- <b-list-group class="list-group-labels">
               <b-list-group-item
                 v-for="categoty in taskCategories"
                 :key="categoty.title + $route.path"
@@ -57,8 +57,21 @@
                 />
                 <span>{{ categoty.title }}</span>
               </b-list-group-item>
+            </b-list-group> -->
+            <!-- new -->
+            <b-list-group class="list-group-labels">
+              <b-list-group-item
+                v-for="categoty in taskCategories"
+                :key="categoty.title + $route.path"
+                @click="$emit('close-left-sidebar',categoty.title,'category')"
+              >
+                <span
+                  class="bullet bullet-sm mr-1"
+                  :class="`bullet-${categoty.color}`"
+                />
+                <span>{{ categoty.title }}</span>
+              </b-list-group-item>
             </b-list-group>
-
 
             <!-- Tags -->
             <div class="mt-3 px-2 d-flex justify-content-between">
@@ -67,8 +80,8 @@
               </h6>
               <feather-icon icon="PlusIcon" />
             </div>
-
-            <b-list-group class="list-group-labels">
+            <!-- old -->
+            <!-- <b-list-group class="list-group-labels">
               <b-list-group-item
                 v-for="tag in taskTags"
                 :key="tag.title + $route.path"
@@ -82,8 +95,21 @@
                 />
                 <span>{{ tag.title }}</span>
               </b-list-group-item>
+            </b-list-group> -->
+            <!-- new -->
+            <b-list-group class="list-group-labels">
+              <b-list-group-item
+                v-for="tag in taskTags"
+                :key="tag.title + $route.path"
+                @click="$emit('close-left-sidebar',tag.title,'tag')"
+              >
+                <span
+                  class="bullet bullet-sm mr-1"
+                  :class="`bullet-${tag.color}`"
+                />
+                <span>{{ tag.title }}</span>
+              </b-list-group-item>
             </b-list-group>
-
           </vue-perfect-scrollbar>
         </div>
       </div>
@@ -124,7 +150,7 @@ export default {
 
     const taskFilters = [
       {
-        title: 'My Task', 
+        title: 'My Forms', 
         icon: 'MailIcon', 
         route: { 
           name: 'sales-forms' 

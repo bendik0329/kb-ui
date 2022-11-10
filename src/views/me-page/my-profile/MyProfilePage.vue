@@ -1,6 +1,10 @@
 <template>
+  <b-overlay
+      :show="show"
+      rounded="sm"
+    >
   <b-card>
-
+    {{profileData}}
     <!-- media -->
     <b-media no-body>
       <b-media-aside>
@@ -98,6 +102,7 @@
           >
             <b-form-input
               v-model="optionsLocal.company"
+              disabled
               name="company"
               placeholder="Company name"
             />
@@ -147,11 +152,12 @@
       </b-row>
     </b-form>
   </b-card>
+  </b-overlay> 
 </template>
 
 <script>
 import {
-  BFormFile, BButton, BForm, BFormGroup, BFormInput, BRow, BCol, BAlert, BCard, BCardText, BMedia, BMediaAside, BMediaBody, BLink, BImg,
+  BFormFile, BButton, BForm, BFormGroup, BFormInput, BRow, BCol, BAlert, BCard, BCardText, BMedia, BMediaAside, BMediaBody, BLink, BImg,BOverlay,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import { useInputImageRenderer } from '@core/comp-functions/forms/form-utils'
@@ -174,26 +180,37 @@ export default {
     BMediaAside,
     BMediaBody,
     BLink,
+    BOverlay,
   },
   directives: {
     Ripple,
   },
   props: {
     profileData: {
-      type: Object,
+      type: [Object,Array],
       default: () => {},
     },
+  },
+  watch:{
+    profileData(){
+      console.log(this.profileData)
+    }
   },
   data() {
     return {
       optionsLocal: JSON.parse(JSON.stringify(this.profileData)),
       profileFile: null,
+      show:true,
     }
   },
   methods: {
     resetForm() {
       this.optionsLocal = JSON.parse(JSON.stringify(this.generalData))
     },
+    getProfile(){
+      console.log(this.profileData)
+      //this.optionsLocal = JSON.parse(JSON.stringify(this.profileData))
+    }
   },
   setup() {
     const refInputEl = ref(null)
@@ -206,6 +223,9 @@ export default {
       previewEl,
       inputImageRenderer,
     }
+  },
+  mounted(){
+    this.getProfile()
   },
 }
 </script>

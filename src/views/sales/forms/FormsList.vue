@@ -228,7 +228,7 @@
         :task-tags="taskTags"
         :is-task-handler-sidebar-active.sync="isTaskHandlerSidebarActive"
         :class="{'show': mqShallShowLeftSidebar}"
-        @close-left-sidebar="mqShallShowLeftSidebar = false"
+        @close-left-sidebar="switchCategory"
       />
     </portal>
   </div>
@@ -449,7 +449,7 @@ export default {
       if (tag === 'update') return 'info'
       if (tag === 'Mandatory') return 'primary'
       if (tag === 'Optional') return 'success'
-      if (tag === 'Informational') return 'warning'
+      if (tag === 'Informational') return 'info'
       return 'primary'
     }
 
@@ -500,6 +500,7 @@ export default {
     const  filterCategory = formData => {
       console.log(formData)
       let newForms = {
+        origin:formData,
         category:{},
         tag:{}
       }
@@ -517,6 +518,10 @@ export default {
       //tag
       console.log('filter',newForms)
       filterForms.value = newForms
+    }
+
+    const switchCategory = (category,type) =>{
+      Forms.value = filterForms.value[type][category]
     }
 
 
@@ -581,6 +586,7 @@ export default {
       updateForm,
       fetchForms,
       filterCategory,
+      switchCategory,
 
 
       taskTags,
