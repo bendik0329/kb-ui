@@ -54,9 +54,11 @@ export default {
           .catch(error => reject(error))
       })
     },
-    addForms(ctx, form) {
+    addForm(ctx, form) {
       return new Promise((resolve, reject) => {
         let url = `${$theServer.server}/forms`
+        delete form.id
+        console.log(form)
         axios
           .post(url, { data: form })
           .then(response => {

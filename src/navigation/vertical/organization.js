@@ -10,13 +10,13 @@ export default [
             title: 'Franchise',
             route: 'organization-franchise',
             action: 'read',
-            resource: 'owner',
+            resource: 'Owner',
           },
           {
             title: 'PlansManagement',
             route: 'organization-plans-management',
             action: 'read',
-            resource: 'franchisee',
+            resource: 'Franchisee',
           },
           {
             title: 'Teams',
@@ -34,19 +34,19 @@ export default [
             title: 'TaxManagement',
             route: 'organization-tax-management',
             action: 'read',
-            resource: 'franchisee',
+            resource: 'Franchisee',
           },
           {
             title: 'MembershipManagement',
             route: 'organization-membership-management',
             action: 'read',
-            resource: 'franchisee',
+            resource: 'Franchisee',
           },
           {
             title: 'LicenseManagement',
             route: 'organization-license-management',
             action: 'read',
-            resource: 'franchisee',
+            resource: 'Franchisee',
           },
           {
             title: 'Cases',

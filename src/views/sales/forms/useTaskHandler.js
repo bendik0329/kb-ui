@@ -64,6 +64,10 @@ export default function useTaskHandler(props, emit) {
     if (tags.includes('low')) return 'success'
     if (tags.includes('update')) return 'danger'
     if (tags.includes('team')) return 'info'
+    //new
+    if (tags.includes('Mandatory')) return 'primary'
+    if (tags.includes('Optional')) return 'warning'
+    if (tags.includes('Informational')) return 'success'
     return 'primary'
   }
 
@@ -71,11 +75,6 @@ export default function useTaskHandler(props, emit) {
     { label: 'Mandatory', value: 'Mandatory' },
     { label: 'Optional', value: 'Optional' },
     { label: 'Informational', value: 'Informational' },
-    { label: 'Team', value: 'team' },
-    { label: 'Low', value: 'low' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'High', value: 'high' },
-    { label: 'Update', value: 'update' },
   ]
   const categoriesOptions = [
     { label: 'Selling', value: 'Selling' },

@@ -155,7 +155,7 @@
               <v-select
                 v-model="taskLocal.category"
                 :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-                :close-on-select="false"
+                :close-on-select="true"
                 :options="categoriesOptions"
                 :reduce="option => option.value"
                 input-id="categories"
@@ -170,8 +170,7 @@
               <v-select
                 v-model="taskLocal.tags"
                 :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'"
-                multiple
-                :close-on-select="false"
+                :close-on-select="true"
                 :options="tagOptions"
                 :reduce="option => option.value"
                 input-id="tags"

@@ -36,10 +36,11 @@ axios.get(`${$theServer.server}/accesses`)
         dashboard.forEach(item => {
             item.meta.resource = routeAccess.dashboard[item.name]
         })
-        //console.log(routeAccess.dashboard)
+        // console.log(sales)
         sales.forEach(item => {
             item.meta.resource = routeAccess.sales[item.name]
         })
+        // console.log(routeAccess.sales)
         approvals.forEach(item => {
             item.meta.resource = routeAccess.approvals[item.name]
         })

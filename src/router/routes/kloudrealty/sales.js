@@ -106,6 +106,22 @@ export default [
       },
     },
     {
+      path: '/sales/forms/:filter',
+      name: 'sales-forms-filter',
+      component: () => import('@/views/sales/forms/FormsSubpage.vue'),
+      meta: {
+        contentRenderer: 'sidebar-left',
+        contentClass: 'todo-application',
+        navActiveLink: 'sales-forms',
+        resource: 'Agent',
+        action: 'read',
+      },
+      beforeEnter(to, _, next) {
+        if (['important', 'completed', 'deleted'].includes(to.params.filter)) next()
+        else next({ name: 'error-404' })
+      },
+    },
+    {
       path: '/sales/task',
       name: 'sales-task',
       component: () => import('@/views/sales/task/TaskSubpage.vue'),

@@ -75,7 +75,7 @@
       <!-- Todo List -->
       <vue-perfect-scrollbar
         :settings="perfectScrollbarSettings"
-        class="todo-task-list-wrapper list-group scroll-area"
+        class="todo-task-list-wrapper list-group scroll-area ps ps-scroll-y"
       >
         <draggable
           v-model="Forms"
@@ -137,10 +137,6 @@
                   :title="form['users_permissions_user'].username"
                 >
                   <span>{{avatarText(form['users_permissions_user'].username)}}</span>
-                  <!-- <feather-icon
-                    icon="UserIcon"
-                    size="16"
-                  /> -->
                 </b-avatar>
               </div>
             </div>
@@ -202,7 +198,7 @@
               </div>
             </div>
 
-          </li> -->
+          </li>  -->
           <!-- old -->
 
         </draggable>
@@ -220,7 +216,7 @@
       v-model="isTaskHandlerSidebarActive"
       :task="task"
       :clear-task-data="clearTaskData"
-      @remove-task="removeTask"
+      @remove-task="removeForm"
       @add-task="addForm"
       @update-task="updateForm"
     />
@@ -302,12 +298,14 @@ export default {
     watch(routeParams, () => {
       // eslint-disable-next-line no-use-before-define
       fetchTasks()
+      fetchForms()
     })
     const user = ref({})
 
     const tasks = ref([])
 
     const Forms = ref([])
+    const filterForms = ref({})
 
     const sortOptions = [
       'latest',
@@ -318,6 +316,7 @@ export default {
     ]
     const sortBy = ref(routeSortBy.value)
     watch(routeSortBy, val => {
+      console.log(val)
       if (sortOptions.includes(val)) sortBy.value = val
       else sortBy.value = val
     })
@@ -346,6 +345,29 @@ export default {
     const clearTaskData = () => {
       task.value = JSON.parse(JSON.stringify(blankTask))
     }
+
+
+    //new
+    const blankForm = {
+      id: null,
+      title: '',
+      updatedAt: new Date(),
+      description: '',
+      assignee: null,
+      tags: null,
+      category:null,
+      isCompleted: false,
+      isDeleted: false,
+      isImportant: false,
+      ['users_permissions_user']: null,
+    }
+    const form = ref(JSON.parse(JSON.stringify(blankForm)))
+    const clearFormData = () => {
+      form.value = JSON.parse(JSON.stringify(blankForm))
+    }
+    //new
+
+
 
     const addTask = val => {
       store.dispatch('app-todo/addTask', val)
@@ -376,7 +398,7 @@ export default {
         ['users_permissions_user']:user.value
       }
       console.log(newForm)
-      store.dispatch('app-todo/addForm', val)
+      store.dispatch('app-todo/addForm', newForm)
         .then(() => {
           // eslint-disable-next-line no-use-before-define
           fetchForms()
@@ -455,6 +477,7 @@ export default {
 
       router.replace({ name: route.name, query: currentRouteQuery })
     }
+
     //get forms
     const fetchForms = () => {
       store.dispatch('app-todo/fetchForms', {
@@ -469,9 +492,33 @@ export default {
           const userData = {...response.data}
           delete userData.forms
           user.value = userData
+          filterCategory(response.data.forms)
         })
     }
     fetchForms()
+
+    const  filterCategory = formData => {
+      console.log(formData)
+      let newForms = {
+        category:{},
+        tag:{}
+      }
+      taskCategories.forEach(item =>{
+        newForms.category[item.title] = []
+      })
+      taskTags.forEach(item =>{
+        newForms.tag[item.title] = []
+      })
+      //category
+      formData.forEach(form =>{
+        newForms.category[form.category].push(form)
+        newForms.tag[form.tags].push(form)
+      })
+      //tag
+      console.log('filter',newForms)
+      filterForms.value = newForms
+    }
+
 
     const fetchTasks = () => {
       store.dispatch('app-todo/fetchTasks', {
@@ -500,6 +547,22 @@ export default {
       updateTask(taskData)
     }
 
+    //new
+    const handleFormClick = formData => {
+      console.log(formData)
+      form.value = formData
+      isTaskHandlerSidebarActive.value = true
+    }
+
+    // Single Form isCompleted update
+    const updateFormIsCompleted = formData => {
+      // eslint-disable-next-line no-param-reassign
+      formData.isCompleted = !formData.isCompleted
+      updateForm(formData)
+    }
+
+
+
     const { mqShallShowLeftSidebar } = useResponsiveAppLeftSidebarVisibility()
 
     return {
@@ -517,6 +580,7 @@ export default {
       removeForm,
       updateForm,
       fetchForms,
+      filterCategory,
 
 
       taskTags,
@@ -535,6 +599,7 @@ export default {
 
       // Click Handler
       handleTaskClick,
+      handleFormClick,
 
       // Filters
       formatDate,
@@ -542,18 +607,18 @@ export default {
 
       // Single Task isCompleted update
       updateTaskIsCompleted,
+      updateFormIsCompleted,
 
       // Left Sidebar Responsive
       mqShallShowLeftSidebar,
     }
   },
-  
 }
 </script>
 
 <style lang="scss" scoped>
 .draggable-task-handle {
-    position: absolute;
+position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
@@ -567,6 +632,6 @@ export default {
 </style>
 
 <style lang="scss">
-@import "~@core/scss/base/pages/app-todo.scss";
+@import "@core/scss/base/pages/app-todo.scss";
 </style>
 

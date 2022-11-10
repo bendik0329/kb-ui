@@ -1,5 +1,8 @@
 <template>
   <section id="dashboard-ecommerce">
+    <b-overlay
+      :show="isLogin"
+    >
     <b-row class="match-height">
       <b-col
         xl="4"
@@ -93,11 +96,12 @@
       </b-col>
       <!--/ Transaction Card -->
     </b-row>
+    </b-overlay>
   </section>
 </template>
 
 <script>
-import { BRow, BCol } from 'bootstrap-vue'
+import { BRow, BCol,BOverlay, } from 'bootstrap-vue'
 
 import { getUserData } from '@/auth/utils'
 import EcommerceMedal from './EcommerceMedal.vue'
@@ -116,6 +120,7 @@ export default {
   components: {
     BRow,
     BCol,
+    BOverlay,
 
     EcommerceMedal,
     EcommerceStatistics,
@@ -132,9 +137,32 @@ export default {
   data() {
     return {
       data: {},
+      userType:'',
+      isLogin:false,
     }
   },
+  methods:{
+    checkType() {
+      console.log(JSON.parse(localStorage.getItem('userData')))
+      if(localStorage.getItem('accessToken')){
+        this.isLogin = true
+        this.userType = JSON.parse(localStorage.getItem('userData')).role
+        console.log(this.userType)
+        this.routerPushToDashboard(this.userType)
+      }
+     
+    },
+    routerPushToDashboard(type){
+        let dashboard = ''
+        if(type =='owner') dashboard = 'owner'
+        if(type =='franchise') dashboard = 'franchise'
+        if(type =='Agent') dashboard = 'agent'
+        // console.log(`dashboard-${ dashboard }`)
+        this.$router.push({name:`dashboard-${ dashboard }`})
+      },
+  },
   created() {
+    this.checkType()
     // data
     this.$http.get('/ecommerce/data')
       .then(response => {

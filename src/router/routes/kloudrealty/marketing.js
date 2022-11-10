@@ -40,7 +40,7 @@ export default [
         name: 'marketing-SEO',
         component: () => import('@/views/marketing/SEO(O)/SEOSubpage.vue'),
         meta:{
-          resource: 'owner',
+          resource: 'Owner',
           action: 'read',
         }
     },
@@ -49,7 +49,7 @@ export default [
         name: 'marketing-AI',
         component: () => import('@/views/marketing/AI(O)/AISubpage.vue'),
         meta:{
-          resource: 'owner',
+          resource: 'Owner',
           action: 'read',
         }
     },

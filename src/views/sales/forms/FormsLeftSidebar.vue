@@ -18,7 +18,7 @@
             class="sidebar-menu-list scroll-area"
           >
             <!-- Filters -->
-            <!-- <b-list-group class="list-group-filters">
+            <b-list-group class="list-group-filters">
               <b-list-group-item
                 v-for="filter in taskFilters"
                 :key="filter.title + $route.path"
@@ -33,7 +33,7 @@
                 />
                 <span class="align-text-bottom line-height-1">{{ filter.title }}</span>
               </b-list-group-item>
-            </b-list-group> -->
+            </b-list-group>
 
             <!-- Categories -->
             <div class="mt-3 px-2 d-flex justify-content-between">
@@ -127,14 +127,14 @@ export default {
         title: 'My Task', 
         icon: 'MailIcon', 
         route: { 
-          name: 'apps-todo' 
+          name: 'sales-forms' 
         } 
       },
       { 
         title: 'Important', 
         icon: 'StarIcon', 
         route: { 
-          name: 'apps-todo-filter', 
+          name: 'sales-forms-filter', 
           params: { filter: 'important' } 
         } 
       },
@@ -142,7 +142,7 @@ export default {
         title: 'Completed', 
         icon: 'CheckIcon', 
         route: { 
-          name: 'apps-todo-filter', 
+          name: 'sales-forms-filter', 
           params: { filter: 'completed' } 
         } 
       },
@@ -150,7 +150,7 @@ export default {
         title: 'Deleted', 
         icon: 'TrashIcon', 
         route: { 
-          name: 'apps-todo-filter', 
+          name: 'sales-forms-filter', 
           params: { filter: 'deleted' } 
         } 
       },
