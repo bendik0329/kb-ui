@@ -206,7 +206,11 @@ export default {
     return {
       options: 'profile',
       my:{
-        profile:{},
+        profile:{
+          company:{
+            franchise_name:'',
+          }
+        },
         team:{},
         license:{},
         membership:{},
@@ -217,16 +221,18 @@ export default {
       },
     }
   },
-  created() {
-    let url = `${this.GLOBAL.server}/users/me?[populate]=*`
-    this.$http.get(url)
-      .then(res => { 
-        this.my.profile = res.data 
-        console.log(this.my.profile)
+  methods:{
+    getMyData(){
+      let url = `${this.GLOBAL.server}/users/me?[populate]=*`
+      this.$http.get(url)
+        .then(res => { 
+          this.my.profile = res.data 
       })
+    }
   },
-  mounted(){
-    console.log(this.my.profile)
+  created() {
+    this.getMyData()
   },
+  
 }
 </script>

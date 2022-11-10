@@ -4,7 +4,6 @@
       rounded="sm"
     >
   <b-card>
-    {{profileData}}
     <!-- media -->
     <b-media no-body>
       <b-media-aside>
@@ -101,7 +100,7 @@
             label-for="account-company"
           >
             <b-form-input
-              v-model="optionsLocal.company"
+              v-model="optionsLocal.company.franchise_name"
               disabled
               name="company"
               placeholder="Company name"
@@ -193,7 +192,10 @@ export default {
   },
   watch:{
     profileData(){
-      console.log(this.profileData)
+      if(this.profileData) {
+        this.optionsLocal = JSON.parse(JSON.stringify(this.profileData))
+        this.show = false
+      }
     }
   },
   data() {
@@ -208,8 +210,7 @@ export default {
       this.optionsLocal = JSON.parse(JSON.stringify(this.generalData))
     },
     getProfile(){
-      console.log(this.profileData)
-      //this.optionsLocal = JSON.parse(JSON.stringify(this.profileData))
+      if(this.profileData) this.show = false
     }
   },
   setup() {
