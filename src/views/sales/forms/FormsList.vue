@@ -676,12 +676,5 @@ position: absolute;
 
 <style lang="scss">
 @import "~@core/scss/base/pages/app-todo.scss";
-// .ps-container.todo-task-list-wrapper.list-group.scroll-area.ps.ps-scroll-y {
-//   .ps__rail-y{
-//     display: block;
-//     background-color: #fa0;
-//     height: 200px;
-//   }
-// }
 </style>
 
