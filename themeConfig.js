@@ -45,6 +45,8 @@ const  mode ='uat' //'local','uat','prod'
 const  uat = 'https://uat.kloudrealty.com/api/api' 
 const  prod = 'https://kloudrealty.com/api/api'
 
+const img =' https://uat.kloudrealty.com/api'
+
 function ApiUrl(mode) {
   if(mode == 'uat') {
     return uat
@@ -55,5 +57,6 @@ function ApiUrl(mode) {
 }
 
 export const $theServer ={
-  server: ApiUrl(mode)
+  server: ApiUrl(mode),
+  imgUrl: img,
 } 

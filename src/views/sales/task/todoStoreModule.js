@@ -10,7 +10,10 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get('/apps/todo/tasks', { params: payload })
-          .then(response => resolve(response))
+          .then(response => {
+            console.log(response)
+            resolve(response)
+          })
           .catch(error => reject(error))
       })
     },

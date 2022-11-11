@@ -54,6 +54,8 @@ export default [
     name: 'apps-todo',
     component: () => import('@/views/apps/todo/Todo.vue'),
     meta: {
+      resource: 'Agent',
+      action: 'read',
       contentRenderer: 'sidebar-left',
       contentClass: 'todo-application',
     },

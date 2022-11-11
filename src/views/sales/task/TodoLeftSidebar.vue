@@ -18,7 +18,7 @@
             class="sidebar-menu-list scroll-area"
           >
             <!-- Filters -->
-            <!-- <b-list-group class="list-group-filters">
+            <b-list-group class="list-group-filters">
               <b-list-group-item
                 v-for="filter in taskFilters"
                 :key="filter.title + $route.path"
@@ -33,32 +33,7 @@
                 />
                 <span class="align-text-bottom line-height-1">{{ filter.title }}</span>
               </b-list-group-item>
-            </b-list-group> -->
-
-            <!-- Categories -->
-            <div class="mt-3 px-2 d-flex justify-content-between">
-              <h6 class="section-label mb-1">
-                Categories
-              </h6>
-              <feather-icon icon="PlusIcon" />
-            </div>
-
-            <b-list-group class="list-group-labels">
-              <b-list-group-item
-                v-for="categoty in taskCategories"
-                :key="categoty.title + $route.path"
-                :to="categoty.route"
-                :active="isDynamicRouteActive(categoty.route)"
-                @click="$emit('close-left-sidebar')"
-              >
-                <span
-                  class="bullet bullet-sm mr-1"
-                  :class="`bullet-${categoty.color}`"
-                />
-                <span>{{ categoty.title }}</span>
-              </b-list-group-item>
             </b-list-group>
-
 
             <!-- Tags -->
             <div class="mt-3 px-2 d-flex justify-content-between">
@@ -112,10 +87,6 @@ export default {
       type: Array,
       required: true,
     },
-    taskCategories: {
-      type: Array,
-      required: true,
-    }
   },
   setup() {
     const perfectScrollbarSettings = {
@@ -123,42 +94,12 @@ export default {
     }
 
     const taskFilters = [
-      {
-        title: 'My Task', 
-        icon: 'MailIcon', 
-        route: { 
-          name: 'apps-todo' 
-        } 
-      },
-      { 
-        title: 'Important', 
-        icon: 'StarIcon', 
-        route: { 
-          name: 'apps-todo-filter', 
-          params: { filter: 'important' } 
-        } 
-      },
-      { 
-        title: 'Completed', 
-        icon: 'CheckIcon', 
-        route: { 
-          name: 'apps-todo-filter', 
-          params: { filter: 'completed' } 
-        } 
-      },
-      { 
-        title: 'Deleted', 
-        icon: 'TrashIcon', 
-        route: { 
-          name: 'apps-todo-filter', 
-          params: { filter: 'deleted' } 
-        } 
-      },
+      { title: 'My Task', icon: 'MailIcon', route: { name: 'apps-todo' } },
+      { title: 'Important', icon: 'StarIcon', route: { name: 'apps-todo-filter', params: { filter: 'important' } } },
+      { title: 'Completed', icon: 'CheckIcon', route: { name: 'apps-todo-filter', params: { filter: 'completed' } } },
+      { title: 'Deleted', icon: 'TrashIcon', route: { name: 'apps-todo-filter', params: { filter: 'deleted' } } },
     ]
 
-
-
-    
     return {
       perfectScrollbarSettings,
       taskFilters,

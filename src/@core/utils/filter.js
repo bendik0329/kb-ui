@@ -1,5 +1,5 @@
 import { isToday } from './utils'
-
+import{ $theServer } from '../../../themeConfig'
 export const kFormatter = num => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
 
 export const title = (value, replacer = ' ') => {
@@ -20,6 +20,14 @@ export const avatarText = value => {
   const nameArray = value.split(' ')
   return nameArray.map(word => word.charAt(0).toUpperCase()).join('')
 }
+
+//only for strapi
+export const avatarUrl = (avatar,type='small') => {
+  if (!avatar) return ''
+  const url =`${$theServer.imgUrl}${avatar.formats[type].url}`
+  return url
+}
+
 
 /**
  * Format and return date in Humanize format

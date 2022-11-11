@@ -150,7 +150,7 @@
     </div>
 
     <!-- Task Handler -->
-    <task-handler-sidebar
+    <todo-task-handler-sidebar
       v-model="isTaskHandlerSidebarActive"
       :task="task"
       :clear-task-data="clearTaskData"
@@ -161,8 +161,7 @@
 
     <!-- Sidebar -->
     <portal to="content-renderer-sidebar-left">
-      <task-left-sidebar
-        :task-categories="taskCategories"
+      <todo-left-sidebar
         :task-tags="taskTags"
         :is-task-handler-sidebar-active.sync="isTaskHandlerSidebarActive"
         :class="{'show': mqShallShowLeftSidebar}"
@@ -186,17 +185,12 @@ import draggable from 'vuedraggable'
 import { formatDate, avatarText } from '@core/utils/filter'
 import { useRouter } from '@core/utils/utils'
 import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
-import TaskLeftSidebar from './TaskLeftSidebar.vue'
+import TodoLeftSidebar from './TodoLeftSidebar.vue'
 import todoStoreModule from './todoStoreModule'
-import TaskHandlerSidebar from './TaskHandlerSidebar.vue'
+import TodoTaskHandlerSidebar from './TodoTaskHandlerSidebar.vue'
+import searchAndBookmarkData from '@/@core/layouts/components/app-navbar/search-and-bookmark-data'
 
 export default {
-  data(){
-    return{
-      categories:['Selling','Buying','Miscellaneous']
-    }
-  },
-
   components: {
     BFormInput,
     BInputGroup,
@@ -210,8 +204,8 @@ export default {
     VuePerfectScrollbar,
 
     // App SFC
-    TaskLeftSidebar,
-    TaskHandlerSidebar,
+    TodoLeftSidebar,
+    TodoTaskHandlerSidebar,
   },
   setup() {
     const TODO_APP_STORE_MODULE_NAME = 'app-todo'
@@ -300,17 +294,12 @@ export default {
     const isTaskHandlerSidebarActive = ref(false)
 
     const taskTags = [
-      { title: 'Mandatory', color: 'primary', route: { name: 'apps-todo-tag', params: { tag: 'Mandatory' } } },
-      { title: 'Optional', color: 'success', route: { name: 'apps-todo-tag', params: { tag: 'Optional' } } },
-      { title: 'Informational', color: 'info', route: { name: 'apps-todo-tag', params: { tag: 'Informational' } } },
+      { title: 'Team', color: 'primary', route: { name: 'apps-todo-tag', params: { tag: 'team' } } },
+      { title: 'Low', color: 'success', route: { name: 'apps-todo-tag', params: { tag: 'low' } } },
+      { title: 'Medium', color: 'warning', route: { name: 'apps-todo-tag', params: { tag: 'medium' } } },
+      { title: 'High', color: 'danger', route: { name: 'apps-todo-tag', params: { tag: 'high' } } },
+      { title: 'Update', color: 'info', route: { name: 'apps-todo-tag', params: { tag: 'update' } } },
     ]
-
-    const taskCategories = [
-      { title: 'Selling', color: 'primary', route: { name: 'apps-todo-tag', params: { tag: 'Selling' } } },
-      { title: 'Buying', color: 'success', route: { name: 'apps-todo-tag', params: { tag: 'Buying' } } },
-      { title: 'Miscellaneous', color: 'warning', route: { name: 'apps-todo-tag', params: { tag: 'Miscellaneous' } } },
-    ]
-
 
     const resolveTagVariant = tag => {
       if (tag === 'team') return 'primary'
@@ -335,6 +324,9 @@ export default {
     watch(routeQuery, val => {
       searchQuery.value = val
     })
+    
+
+
     // eslint-disable-next-line no-use-before-define
     watch([searchQuery, sortBy], () => fetchTasks())
     const updateRouteQuery = val => {
@@ -371,6 +363,8 @@ export default {
       taskData.isCompleted = !taskData.isCompleted
       updateTask(taskData)
     }
+    
+
 
     const { mqShallShowLeftSidebar } = useResponsiveAppLeftSidebarVisibility()
 
@@ -382,8 +376,6 @@ export default {
       updateTask,
       clearTaskData,
       taskTags,
-      //categories
-      taskCategories,
       searchQuery,
       fetchTasks,
       perfectScrollbarSettings,
@@ -414,7 +406,7 @@ export default {
 
 <style lang="scss" scoped>
 .draggable-task-handle {
-    position: absolute;
+position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
@@ -430,4 +422,3 @@ export default {
 <style lang="scss">
 @import "~@core/scss/base/pages/app-todo.scss";
 </style>
-

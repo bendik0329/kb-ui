@@ -11,7 +11,7 @@
           <b-img
             ref="previewEl"
             rounded
-            :src="optionsLocal.avatar"
+            :src="avatarUrl(optionsLocal.avatar)"
             height="80"
           />
         </b-link>
@@ -159,6 +159,8 @@ import {
   BFormFile, BButton, BForm, BFormGroup, BFormInput, BRow, BCol, BAlert, BCard, BCardText, BMedia, BMediaAside, BMediaBody, BLink, BImg,BOverlay,
 } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
+import { formatDate, avatarText ,avatarUrl} from '@core/utils/filter'
+
 import { useInputImageRenderer } from '@core/comp-functions/forms/form-utils'
 import { ref } from '@vue/composition-api'
 
@@ -223,6 +225,7 @@ export default {
       refInputEl,
       previewEl,
       inputImageRenderer,
+      avatarUrl
     }
   },
   mounted(){

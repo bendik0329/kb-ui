@@ -33,7 +33,8 @@
             <b-form-input
               :value="searchQuery"
               placeholder="Search forms"
-              @input="updateRouteQuery"
+              
+              @change="searchForms"
             />
           </b-input-group>
         </div>
@@ -124,7 +125,7 @@
                 <b-avatar
                   v-if="form['users_permissions_user'].avatar"
                   size="32"
-                  :src="form['users_permissions_user'].avatar"
+                  :src="avatarUrl(form['users_permissions_user'].avatar)"
                   :variant="`light-${resolveAvatarVariant(form.tags)}`"
                   :text="avatarText(form['users_permissions_user'].username)"
                 />
@@ -246,7 +247,7 @@ import {
 import Ripple from 'vue-ripple-directive'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import draggable from 'vuedraggable'
-import { formatDate, avatarText } from '@core/utils/filter'
+import { formatDate, avatarText ,avatarUrl} from '@core/utils/filter'
 import { useRouter } from '@core/utils/utils'
 import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
 import FormsLeftSidebar from './FormsLeftSidebar.vue'
@@ -257,7 +258,6 @@ export default {
   data(){
     return{
       categories:['Selling','Buying','Miscellaneous'],
-      forms:[],
     }
   },
   directives: {
@@ -307,6 +307,7 @@ export default {
     const tasks = ref([])
 
     const Forms = ref([])
+
     const filterForms = ref({})
 
     const sortOptions = [
@@ -397,7 +398,8 @@ export default {
     const addForm = val => {
       const newForm = {
         ...val,
-        ['users_permissions_user']:user.value
+        ['users_permissions_user']:user.value,
+        franchise:franchise.value
       }
       console.log(newForm)
       store.dispatch('app-todo/addForm', newForm)
@@ -472,6 +474,10 @@ export default {
     // eslint-disable-next-line no-use-before-define
     watch([searchQuery, sortBy], () => fetchTasks())
     const updateRouteQuery = val => {
+      console.log('key',val)
+
+      //searchForms(Forms.value,val)
+
       const currentRouteQuery = JSON.parse(JSON.stringify(route.value.query))
 
       if (val) currentRouteQuery.q = val
@@ -479,6 +485,8 @@ export default {
 
       router.replace({ name: route.name, query: currentRouteQuery })
     }
+
+
 
     //get forms
     const fetchForms = () => {
@@ -489,12 +497,18 @@ export default {
         sortBy: sortBy.value,
       })
         .then(response => {
-          console.log('get forms',response.data)
-          Forms.value = response.data.forms
+          console.log('get forms',response.data.franchise.forms)
+          const forms = response.data.franchise.forms
+          Forms.value = forms
           const userData = {...response.data}
           delete userData.forms
+          const franchiseData = { ...response.data.franchise } 
+          delete franchiseData.forms
+          franchise.value = franchiseData
+          // console.log('user',userData)
+          // console.log('franchise',franchise.value)
           user.value = userData
-          filterCategory(response.data.forms)
+          filterCategory(forms)
         })
     }
     fetchForms()
@@ -526,21 +540,25 @@ export default {
 
     }
 
-    const fetchFranchise = () => {
-      store.dispatch('app-todo/fetchFranchise', {
-        q: searchQuery.value,
-        filter: router.currentRoute.params.filter,
-        tag: router.currentRoute.params.tag,
-        sortBy: sortBy.value,
-      })
-        .then(response => {
-          console.log(response.data)
-          franchise.value = response.data
+    //Search 
+    const searchForms = key => {
+      if(key){
+        Forms.value = filterForms.value['origin']
+        const newForms = []
+        Forms.value.forEach(item => {
+          if(item.title.includes(key)) newForms.push(item)
         })
+        Forms.value = newForms
+      }else{
+        Forms.value = filterForms.value['origin']
+      }
     }
-    fetchFranchise()
+
+
+
 
     const fetchTasks = () => {
+      
       store.dispatch('app-todo/fetchTasks', {
         q: searchQuery.value,
         filter: router.currentRoute.params.filter,
@@ -601,9 +619,9 @@ export default {
       removeForm,
       updateForm,
       fetchForms,
-      fetchFranchise,
       filterCategory,
       switchCategory,
+      searchForms,
 
 
       taskTags,
@@ -627,6 +645,7 @@ export default {
       // Filters
       formatDate,
       avatarText,
+      avatarUrl,
 
       // Single Task isCompleted update
       updateTaskIsCompleted,
@@ -636,6 +655,7 @@ export default {
       mqShallShowLeftSidebar,
     }
   },
+  
 }
 </script>
 
@@ -655,6 +675,13 @@ position: absolute;
 </style>
 
 <style lang="scss">
-@import "@core/scss/base/pages/app-todo.scss";
+@import "~@core/scss/base/pages/app-todo.scss";
+// .ps-container.todo-task-list-wrapper.list-group.scroll-area.ps.ps-scroll-y {
+//   .ps__rail-y{
+//     display: block;
+//     background-color: #fa0;
+//     height: 200px;
+//   }
+// }
 </style>
 

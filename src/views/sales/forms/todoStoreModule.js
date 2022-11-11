@@ -44,28 +44,16 @@ export default {
 
 
     //new
-    fetchFranchise(ctx, payload) {
-      console.log(payload)
-      return new Promise((resolve, reject) => {
-        let url = `${$theServer.server}/users/me?[populate]=*`
-        axios
-          .get(url, { params: payload })
-          .then(response => {
-            // console.log(response.data)
-            resolve(response)
-          })
-          .catch(error => reject(error))
-      })
-    },
-
+    
 
     fetchForms(ctx, payload) {
+      
       return new Promise((resolve, reject) => {
-        let url = `${$theServer.server}/users/me?populate[forms][populate]=*`
+        let url = `${$theServer.server}/users/me?populate[franchise][populate][forms][populate][users_permissions_user][populate]=avatar`
         axios
           .get(url, { params: payload })
           .then(response => {
-            console.log(response.data)
+            // console.log(response)
             resolve(response)
           })
           .catch(error => reject(error))
@@ -75,7 +63,7 @@ export default {
       return new Promise((resolve, reject) => {
         let url = `${$theServer.server}/forms`
         delete form.id
-        console.log(form)
+        console.log('add',form)
         axios
           .post(url, { data: form })
           .then(response => {

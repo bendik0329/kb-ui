@@ -97,7 +97,7 @@ export default [
     {
       path: '/sales/forms',
       name: 'sales-forms',
-      component: () => import('@/views/sales/forms/FormsSubpage.vue'),
+      component: () => import('@/views/sales/forms/FormsList.vue'),
       meta: {
         contentRenderer: 'sidebar-left',
         contentClass: 'todo-application',
@@ -108,7 +108,7 @@ export default [
     {
       path: '/sales/forms/:filter',
       name: 'sales-forms-filter',
-      component: () => import('@/views/sales/forms/FormsSubpage.vue'),
+      component: () => import('@/views/sales/forms/FormsList.vue'),
       meta: {
         contentRenderer: 'sidebar-left',
         contentClass: 'todo-application',
@@ -124,7 +124,7 @@ export default [
     {
       path: '/sales/task',
       name: 'sales-task',
-      component: () => import('@/views/sales/task/TaskSubpage.vue'),
+      component: () => import('@/views/sales/task/TaskList.vue'),
       meta: {
         contentRenderer: 'sidebar-left',
         contentClass: 'todo-application',

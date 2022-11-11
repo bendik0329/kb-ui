@@ -137,8 +137,8 @@ const router = new VueRouter({
         action: 'read',
       },
     },
-    ...kloudrealtyRoute,
     ...apps,
+    ...kloudrealtyRoute,
     {
       path: '*',
       redirect: 'error-404',
