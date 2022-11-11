@@ -20,20 +20,16 @@
            
             <b-list-group class="list-group-filters">
               <b-list-group-item
-                v-for="filter in taskFilters"
-                :key="filter.title + $route.path"
-                :to="filter.route"
-                :active="isDynamicRouteActive(filter.route)"
-                @click="$emit('close-left-sidebar')"
+                @click="$emit('close-left-sidebar','all','origin')"
               >
                 <feather-icon
-                  :icon="filter.icon"
+                  icon="MailIcon"
                   size="18"
                   class="mr-75"
                 />
-                <span class="align-text-bottom line-height-1">{{ filter.title }}</span>
+                <span class="align-text-bottom line-height-1">ALL</span>
               </b-list-group-item>
-            </b-list-group> -->
+            </b-list-group>
 
             <!-- Categories -->
             <div class="mt-3 px-2 d-flex justify-content-between">
@@ -80,22 +76,7 @@
               </h6>
               <feather-icon icon="PlusIcon" />
             </div>
-            <!-- old -->
-            <!-- <b-list-group class="list-group-labels">
-              <b-list-group-item
-                v-for="tag in taskTags"
-                :key="tag.title + $route.path"
-                :to="tag.route"
-                :active="isDynamicRouteActive(tag.route)"
-                @click="$emit('close-left-sidebar')"
-              >
-                <span
-                  class="bullet bullet-sm mr-1"
-                  :class="`bullet-${tag.color}`"
-                />
-                <span>{{ tag.title }}</span>
-              </b-list-group-item>
-            </b-list-group> -->
+            
             <!-- new -->
             <b-list-group class="list-group-labels">
               <b-list-group-item

@@ -41,14 +41,31 @@ export default {
           .catch(error => reject(error))
       })
     },
+
+
     //new
+    fetchFranchise(ctx, payload) {
+      console.log(payload)
+      return new Promise((resolve, reject) => {
+        let url = `${$theServer.server}/users/me?[populate]=*`
+        axios
+          .get(url, { params: payload })
+          .then(response => {
+            // console.log(response.data)
+            resolve(response)
+          })
+          .catch(error => reject(error))
+      })
+    },
+
+
     fetchForms(ctx, payload) {
       return new Promise((resolve, reject) => {
         let url = `${$theServer.server}/users/me?populate[forms][populate]=*`
         axios
           .get(url, { params: payload })
           .then(response => {
-            //console.log(response.data)
+            console.log(response.data)
             resolve(response)
           })
           .catch(error => reject(error))

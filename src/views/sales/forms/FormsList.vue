@@ -302,6 +302,8 @@ export default {
     })
     const user = ref({})
 
+    const franchise = ref({})
+
     const tasks = ref([])
 
     const Forms = ref([])
@@ -498,7 +500,6 @@ export default {
     fetchForms()
 
     const  filterCategory = formData => {
-      console.log(formData)
       let newForms = {
         origin:formData,
         category:{},
@@ -516,14 +517,28 @@ export default {
         newForms.tag[form.tags].push(form)
       })
       //tag
-      console.log('filter',newForms)
       filterForms.value = newForms
     }
 
     const switchCategory = (category,type) =>{
       Forms.value = filterForms.value[type][category]
+      if(type =='origin') Forms.value = filterForms.value[type]
+
     }
 
+    const fetchFranchise = () => {
+      store.dispatch('app-todo/fetchFranchise', {
+        q: searchQuery.value,
+        filter: router.currentRoute.params.filter,
+        tag: router.currentRoute.params.tag,
+        sortBy: sortBy.value,
+      })
+        .then(response => {
+          console.log(response.data)
+          franchise.value = response.data
+        })
+    }
+    fetchFranchise()
 
     const fetchTasks = () => {
       store.dispatch('app-todo/fetchTasks', {
@@ -580,11 +595,13 @@ export default {
 
       //new
       user,
+      franchise,
       Forms,
       addForm,
       removeForm,
       updateForm,
       fetchForms,
+      fetchFranchise,
       filterCategory,
       switchCategory,
 
