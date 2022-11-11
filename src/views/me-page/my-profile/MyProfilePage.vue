@@ -59,25 +59,25 @@
       <b-row>
         <b-col sm="6">
           <b-form-group
-            label="Username"
+            label="First Name"
             label-for="account-username"
           >
             <b-form-input
               v-model="optionsLocal.username"
-              placeholder="Username"
+              placeholder="ex. John"
               name="username"
             />
           </b-form-group>
         </b-col>
         <b-col sm="6">
           <b-form-group
-            label="Name"
+            label="Last Name"
             label-for="account-name"
           >
             <b-form-input
               v-model="optionsLocal.fullName"
               name="name"
-              placeholder="Name"
+              placeholder="ex. Doe"
             />
           </b-form-group>
         </b-col>
@@ -96,6 +96,31 @@
         </b-col>
         <b-col sm="6">
           <b-form-group
+            label="Phone No."
+            label-for="account-e-mail"
+          >
+            <b-form-input
+              v-model="optionsLocal.Phone"
+              name="phone"
+              placeholder="ex. (000) 000-0000"
+            />
+          </b-form-group>
+        </b-col>
+<b-col sm="6">
+          <b-form-group
+            label="Address"
+            label-for="address"
+          >
+            <b-form-input
+              v-model="optionsLocal.address"
+              name="address"
+              placeholder="ex. 123 Main St. Houston, TX"
+            />
+
+          </b-form-group>
+        </b-col>
+        <b-col sm="6">
+          <b-form-group
             label="Company"
             label-for="account-company"
           >
@@ -107,7 +132,6 @@
             />
           </b-form-group>
         </b-col>
-
         <!-- alert -->
         <b-col
           cols="12"
