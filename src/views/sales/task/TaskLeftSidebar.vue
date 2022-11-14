@@ -94,10 +94,10 @@ export default {
     }
 
     const taskFilters = [
-      { title: 'My Task', icon: 'MailIcon', route: { name: 'apps-todo' } },
-      { title: 'Important', icon: 'StarIcon', route: { name: 'apps-todo-filter', params: { filter: 'important' } } },
-      { title: 'Completed', icon: 'CheckIcon', route: { name: 'apps-todo-filter', params: { filter: 'completed' } } },
-      { title: 'Deleted', icon: 'TrashIcon', route: { name: 'apps-todo-filter', params: { filter: 'deleted' } } },
+      { title: 'My Task', icon: 'MailIcon', route: { name: 'sales-task' } },
+      { title: 'Important', icon: 'StarIcon', route: { name: 'sales-task-filter', params: { filter: 'important' } } },
+      { title: 'Completed', icon: 'CheckIcon', route: { name: 'sales-task-filter', params: { filter: 'completed' } } },
+      { title: 'Deleted', icon: 'TrashIcon', route: { name: 'sales-task-filter', params: { filter: 'deleted' } } },
     ]
 
     return {

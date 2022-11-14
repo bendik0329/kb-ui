@@ -150,7 +150,7 @@
     </div>
 
     <!-- Task Handler -->
-    <todo-task-handler-sidebar
+    <task-handler-sidebar
       v-model="isTaskHandlerSidebarActive"
       :task="task"
       :clear-task-data="clearTaskData"
@@ -161,7 +161,7 @@
 
     <!-- Sidebar -->
     <portal to="content-renderer-sidebar-left">
-      <todo-left-sidebar
+      <task-left-sidebar
         :task-tags="taskTags"
         :is-task-handler-sidebar-active.sync="isTaskHandlerSidebarActive"
         :class="{'show': mqShallShowLeftSidebar}"
@@ -185,9 +185,9 @@ import draggable from 'vuedraggable'
 import { formatDate, avatarText } from '@core/utils/filter'
 import { useRouter } from '@core/utils/utils'
 import { useResponsiveAppLeftSidebarVisibility } from '@core/comp-functions/ui/app'
-import TodoLeftSidebar from './TodoLeftSidebar.vue'
-import todoStoreModule from './todoStoreModule'
-import TodoTaskHandlerSidebar from './TodoTaskHandlerSidebar.vue'
+import TaskLeftSidebar from './TaskLeftSidebar.vue'
+import taskStoreModule from './taskStoreModule'
+import TaskHandlerSidebar from './TaskHandlerSidebar.vue'
 import searchAndBookmarkData from '@/@core/layouts/components/app-navbar/search-and-bookmark-data'
 
 export default {
@@ -204,14 +204,14 @@ export default {
     VuePerfectScrollbar,
 
     // App SFC
-    TodoLeftSidebar,
-    TodoTaskHandlerSidebar,
+    TaskLeftSidebar,
+    TaskHandlerSidebar,
   },
   setup() {
     const TODO_APP_STORE_MODULE_NAME = 'app-todo'
 
     // Register module
-    if (!store.hasModule(TODO_APP_STORE_MODULE_NAME)) store.registerModule(TODO_APP_STORE_MODULE_NAME, todoStoreModule)
+    if (!store.hasModule(TODO_APP_STORE_MODULE_NAME)) store.registerModule(TODO_APP_STORE_MODULE_NAME, taskStoreModule)
 
     // UnRegister on leave
     onUnmounted(() => {
@@ -294,11 +294,11 @@ export default {
     const isTaskHandlerSidebarActive = ref(false)
 
     const taskTags = [
-      { title: 'Team', color: 'primary', route: { name: 'apps-todo-tag', params: { tag: 'team' } } },
-      { title: 'Low', color: 'success', route: { name: 'apps-todo-tag', params: { tag: 'low' } } },
-      { title: 'Medium', color: 'warning', route: { name: 'apps-todo-tag', params: { tag: 'medium' } } },
-      { title: 'High', color: 'danger', route: { name: 'apps-todo-tag', params: { tag: 'high' } } },
-      { title: 'Update', color: 'info', route: { name: 'apps-todo-tag', params: { tag: 'update' } } },
+      { title: 'Team', color: 'primary', route: { name: 'sales-task-tag', params: { tag: 'team' } } },
+      { title: 'Low', color: 'success', route: { name: 'sales-task-tag', params: { tag: 'low' } } },
+      { title: 'Medium', color: 'warning', route: { name: 'sales-task-tag', params: { tag: 'medium' } } },
+      { title: 'High', color: 'danger', route: { name: 'sales-task-tag', params: { tag: 'high' } } },
+      { title: 'Update', color: 'info', route: { name: 'sales-task-tag', params: { tag: 'update' } } },
     ]
 
     const resolveTagVariant = tag => {

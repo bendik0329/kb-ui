@@ -1,5 +1,8 @@
 import axios from '@axios'
 
+const apiUrl ='https://uat.kloudrealty.com/api/api/users/me?populate[tasks][populate]=*'
+
+
 export default {
   namespaced: true,
   state: {},
@@ -8,6 +11,15 @@ export default {
   actions: {
     fetchTasks(ctx, payload) {
       return new Promise((resolve, reject) => {
+        let  url = apiUrl
+        if(payload.q) {
+          url = apiUrl+'&populate[tasks][filters][title][$contains]='+payload.q
+          axios
+          .get(url)
+          .then(response => {
+            console.log('filters',response.data.tasks)
+          })
+        }
         axios
           .get('/apps/todo/tasks', { params: payload })
           .then(response => {

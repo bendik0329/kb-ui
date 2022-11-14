@@ -132,5 +132,37 @@ export default [
         action: 'read',
       },
     },
+    {
+      path: '/sales/task/:filter',
+      name: 'sales-task-filter',
+      component: () => import('@/views/sales/task/TaskList.vue'),
+      meta: {
+        contentRenderer: 'sidebar-left',
+        contentClass: 'todo-application',
+        navActiveLink: 'sales-task',
+        resource: 'Agent',
+        action: 'read',
+      },
+      beforeEnter(to, _, next) {
+        if (['important', 'completed', 'deleted'].includes(to.params.filter)) next()
+        else next({ name: 'error-404' })
+      },
+    },
+    {
+      path: '/sales/task/tag/:tag',
+      name: 'sales-task-tag',
+      component: () => import('@/views/sales/task/TaskList.vue'),
+      meta: {
+        contentRenderer: 'sidebar-left',
+        contentClass: 'todo-application',
+        navActiveLink: 'sales-task',
+        resource: 'Agent',
+        action: 'read',
+      },
+      beforeEnter(to, _, next) {
+        if (['team', 'low', 'medium', 'high', 'update'].includes(to.params.tag)) next()
+        else next({ name: 'error-404' })
+      },
+    },
   ]
   
